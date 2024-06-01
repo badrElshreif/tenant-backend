@@ -3,6 +3,7 @@
 namespace App\Main\Tenant\Domain\Listeners;
 
 use App\Main\Tenant\Domain\Events\TenantCreated;
+use App\Tenant\Admin\Domain\Models\Admin;
 use Database\Seeders\TenantDatabaseSeeder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -36,12 +37,19 @@ class TenantCreateDatabase
         config(["database.connections.tenant.database" => $db_name]);
 
         //run migration files
-        //php artisan migrate --path=database/migrations/store -database=mysql_store
+        //php artisan migrate --path=database/migrations/store -database=tenant
         Artisan::call('migrate', [
             '--path' => 'database/migrations/tenant',
             '--database' => 'tenant',
             '--force' => true,
         ]);
+
+        if ($tenant) {
+            Artisan::call('tenant:install-passport', [
+                'tenant_id' => $tenant->id,
+            ]);
+        }
+
 
         $tenantDatabaseSeeder = new TenantDatabaseSeeder();
         $tenantDatabaseSeeder->run();
@@ -51,14 +59,15 @@ class TenantCreateDatabase
              'upload_dir' => Str::slug($tenant->name),
          ]); */
 
-//        Admin::create([
-//            'name' => $user->name,
-//            'email' => $user->email,
-//            'username' => $tenant->name,
-//            'default_lang' => 'ar',
-//            'password' => $user->password,
-//            'super_admin' => 1,
-//        ]);
+        Admin::create([
+            'name' => $user->name,
+            'email' => $user->email,
+            'username' => $tenant->name,
+            'default_lang' => 'ar',
+            'password' => $user->password,
+            'is_super_admin' => 1,
+            'is_active' => 1,
+        ]);
 
         /*  $languages = Language::whereStatus('active')->get();
           foreach ($languages as $lang) {

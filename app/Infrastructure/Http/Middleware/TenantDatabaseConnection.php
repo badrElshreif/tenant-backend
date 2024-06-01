@@ -21,6 +21,7 @@ class TenantDatabaseConnection
 
             config(["database.connections.tenant.database" => $database]);
             config(['database.default' => 'tenant']);
+            config(["passport.connection" => 'tenant']);
 
             DB::purge('tenant');
             DB::reconnect('tenant');

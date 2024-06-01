@@ -45,5 +45,6 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->withCommands([
-        \App\Infrastructure\Console\Commands\CreateTenant::class
+        \App\Infrastructure\Console\Commands\CreateTenant::class,
+        \App\Infrastructure\Console\Commands\TenantPassport::class,
     ])->create();

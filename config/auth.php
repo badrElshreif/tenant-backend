@@ -40,6 +40,11 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'tenant-admin' => [
+            'driver' => 'passport',
+            'provider' => 'tenant_admins',
+            'hash' => false,
+        ],
     ],
 
     /*
@@ -62,7 +67,11 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\User::class),
+            'model' => env('AUTH_MODEL', App\Infrastructure\Models\User::class),
+        ],
+        'tenant_admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Tenant\Admin\Domain\Models\Admin::class,
         ],
 
         // 'users' => [
