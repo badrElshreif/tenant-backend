@@ -10,7 +10,7 @@ use App\Product\Domain\Models\ProductView;
 use App\Product\Domain\Models\Product;
 use App\Product\Domain\Models\ProductExtraProperty;
 use App\Infrastructure\Exceptions\ModelNotFoundException;
-use App\Infrastructure\Helpers\Traits\UploaderHelper;
+use App\Infrastructure\Traits\UploaderHelper;
 use App\Store\Domain\Models\Store;
 use App\User\Domain\Models\User;
 use App\Warranty\Domain\Models\Warranty;

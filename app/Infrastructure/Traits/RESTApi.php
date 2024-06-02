@@ -14,7 +14,9 @@ trait RESTApi
      */
     public function sendJson($responseObject, $statusCode = Response::HTTP_OK, $responseKey = 'response')
     {
-        return response($responseObject, $statusCode);
+        $responseArr['status'] = true;
+        $responseArr['data'] = $responseObject;
+        return response()->json($responseArr, $statusCode);
     }
 
 
@@ -23,20 +25,24 @@ trait RESTApi
      * @param $errorObject , $errorKey, $statusCode
      * @return \Illuminate\Http\JsonResponse
      */
-    public function sendError($errorObject, $statusCode = Response::HTTP_UNPROCESSABLE_ENTITY, $errorKey = 'error')
+    public function sendError($errorObject, $statusCode = Response::HTTP_UNPROCESSABLE_ENTITY, $errorKey = 'errors')
     {
+        $errorResponse['status'] = false;
+        $errorResponse['message'] = is_array($errorObject->messages()) ? $errorObject->first() : $errorObject;
         $errorResponse[$errorKey] = $errorObject;
-        return response($errorResponse, $statusCode);
+        return response()->json($errorResponse, $statusCode);
     }
 
     public function sendRedirectError($errorObject, $statusCode = Response::HTTP_PERMANENTLY_REDIRECT, $errorKey = 'error')
     {
-        return response($$errorObject, $statusCode);
+        return response()->json($errorObject, $statusCode);
     }
 
     public function sendMessage($responseObject, $statusCode = Response::HTTP_ACCEPTED, $responseKey = 'response')
     {
-        return response($responseObject, $statusCode);
+        $responseArr['status'] = false;
+        $responseArr['data'] = $responseObject;
+        return response()->json($responseArr, $statusCode);
     }
 
 }

@@ -3,9 +3,9 @@
 namespace App\Tenant\Product\Responders;
 
 use App\Infrastructure\Responders\Responder;
-use App\Infrastructure\Helpers\Traits\RESTApi;
+use App\Infrastructure\Traits\RESTApi;
 use App\Tenant\Product\Domain\Resources\RatingResource;
-use App\Infrastructure\Helpers\Traits\ApiPaginator;
+use App\Infrastructure\Traits\ApiPaginator;
 use Symfony\Component\HttpFoundation\Response;
 class RatingResponder extends Responder
 {

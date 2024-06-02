@@ -4,8 +4,8 @@ namespace App\Tenant\Order\Responders;
 
 use App\Infrastructure\Responders\Responder;
 use App\Tenant\Order\Domain\Resources\TransactionResource;
-use App\Infrastructure\Helpers\Traits\RESTApi;
-use App\Infrastructure\Helpers\Traits\ApiPaginator;
+use App\Infrastructure\Traits\RESTApi;
+use App\Infrastructure\Traits\ApiPaginator;
 use Symfony\Component\HttpFoundation\Response;
 
 class TransactionResponder extends Responder

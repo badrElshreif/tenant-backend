@@ -3,10 +3,10 @@
 namespace App\Tenant\Admin\Responders;
 
 use App\Infrastructure\Domain\Resources\GenericNameResource;
-use App\Infrastructure\Helpers\Traits\ApiPaginator;
+use App\Infrastructure\Traits\ApiPaginator;
 use App\Infrastructure\Responders\Responder;
 use App\Infrastructure\Responders\ResponderInterface;
-use App\Infrastructure\Helpers\Traits\RESTApi;
+use App\Infrastructure\Traits\RESTApi;
 use Symfony\Component\HttpFoundation\Response;
 use App\Tenant\Admin\Domain\Resources\RoleResource;
 use App\Tenant\Admin\Domain\Resources\RoleLiteResource;

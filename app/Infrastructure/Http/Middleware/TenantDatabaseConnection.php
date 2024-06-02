@@ -31,6 +31,7 @@ class TenantDatabaseConnection
                 abort(403, "Database connection failed");
             }
             app()->instance(Tenant::class, $tenant);
+            $request->route()->forgetParameter('tenant');
             $response = $next($request);
             DB::disconnect("tenant");
             return $response;

@@ -4,7 +4,7 @@ namespace App\Tenant\Admin\Responders;
 
 use App\Infrastructure\Responders\Responder;
 use App\Infrastructure\Responders\ResponderInterface;
-use App\Infrastructure\Helpers\Traits\RESTApi;
+use App\Infrastructure\Traits\RESTApi;
 
 class ChangePasswordResponder extends Responder
 {

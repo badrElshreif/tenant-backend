@@ -2,11 +2,10 @@
 
 namespace App\Tenant\Location\Responders;
 
-use App\Infrastructure\Domain\Resources\GenericNameResource;
-use App\Infrastructure\Helpers\Traits\ApiPaginator;
+use App\Infrastructure\Traits\ApiPaginator;
 use App\Infrastructure\Responders\Responder;
 use App\Infrastructure\Responders\ResponderInterface;
-use App\Infrastructure\Helpers\Traits\RESTApi;
+use App\Infrastructure\Traits\RESTApi;
 use Symfony\Component\HttpFoundation\Response;
 use App\Tenant\Location\Domain\Resources\CountryResource;
 use App\Tenant\Location\Domain\Resources\CountryLiteResource;
@@ -28,25 +27,13 @@ class CountryResponder extends Responder implements ResponderInterface
                 $this->response->getStatus()
             );
 
-        if ($this->response->getStatus() == Response::HTTP_OK) {
-            if (request()->is_paginated == 1) {
-                return $this->getPaginatedResponse(
-                    $this->response->getData(),
-                    CountryLiteResource::collection($this->response->getData())
-                );
-            }
-            return $this->sendJson(
-                CountryLiteResource::collection($this->response->getData()),
-                $this->response->getStatus()
-            );
-        }
 
         if ($this->response->getStatus() == Response::HTTP_ACCEPTED) {
             if (request()->is_paginated == 1) {
-                return $this->getPaginatedResponse(
+                return $this->sendJson($this->getPaginatedResponse(
                     $this->response->getData(),
                     CountryResource::collection($this->response->getData())
-                );
+                ));
             }
             return $this->sendJson(
                 CountryLiteResource::collection($this->response->getData())->resource

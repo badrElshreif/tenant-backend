@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Tenant\Location\Actions;
+
 use App\Tenant\Location\Domain\Services\ShowCountryService;
 use App\Tenant\Location\Responders\CountryResponder;
-use App\Tenant\Location\Domain\Models\Country;
 
 class ShowCountryAction
 {

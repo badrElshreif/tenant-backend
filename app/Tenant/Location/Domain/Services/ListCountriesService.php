@@ -23,11 +23,11 @@ class ListCountriesService extends Service
         $order = isset($data['orderBy']) ? $data['orderBy'] : 'order';
         $order_type = isset($data['orderType']) ? $data['orderType'] : 'ASC';
         $limit = isset($data['per_page']) ? $data['per_page'] : config('app.pagination_limit');
-        $active = isset($data['active']) ? $data['active'] : 1;
+        $active = isset($data['is_active']) ? $data['is_active'] : 1;
         $all = isset($data['all']) ? $data['all'] : 0;
-        if(isset($data['active']) && $data['active'] == 'true')
+        if(isset($data['is_active']) && $data['is_active'] == 'true')
             $active = 1;
-        if(isset($data['active']) && $data['active'] == 'false')
+        if(isset($data['is_active']) && $data['is_active'] == 'false')
             $active = 0;
         if( isset($data['is_paginated']) && $data['is_paginated'] == 1 ):
 
@@ -71,7 +71,7 @@ class ListCountriesService extends Service
             // if(auth('admin')->check())
             //     $countries = $countries->orderBy($order, $order_type)->get();
             // else
-            return new GenericPayload($countries, Response::HTTP_OK);
+            return new GenericPayload($countries, Response::HTTP_ACCEPTED);
         endif;
     }
 }

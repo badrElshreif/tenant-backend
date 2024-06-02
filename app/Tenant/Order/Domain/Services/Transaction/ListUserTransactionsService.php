@@ -6,7 +6,7 @@ use App\Infrastructure\Domain\Payloads\GenericPayload;
 use App\Infrastructure\Domain\Services\Service;
 use App\Tenant\Order\Domain\Models\Transaction;
 use Symfony\Component\HttpFoundation\Response;
-use App\Infrastructure\Helpers\Traits\ApiPaginator;
+use App\Infrastructure\Traits\ApiPaginator;
 use App\Tenant\Order\Domain\Resources\TransactionResource;
 
 class ListUserTransactionsService extends Service

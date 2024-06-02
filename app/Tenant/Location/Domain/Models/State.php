@@ -22,7 +22,6 @@ class State extends Model
         'is_active' => 'boolean'
     ];
 
-
     public function country()
     {
         return $this->belongsTo('App\Tenant\Location\Domain\Models\Country');

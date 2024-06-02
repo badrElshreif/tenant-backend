@@ -3,7 +3,7 @@
 namespace App\Tenant\Location\Responders;
 
 use App\Infrastructure\Responders\Responder;
-use App\Infrastructure\Helpers\Traits\RESTApi;
+use App\Infrastructure\Traits\RESTApi;
 use App\Tenant\Location\Domain\Resources\StateResource;
 
 class UpdateStateResponder extends Responder

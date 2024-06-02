@@ -3,8 +3,8 @@
 namespace App\Tenant\Location\Responders;
 
 use App\Infrastructure\Responders\Responder;
-use App\Infrastructure\Helpers\Traits\RESTApi;
-use App\Infrastructure\Helpers\Traits\ApiPaginator;
+use App\Infrastructure\Traits\RESTApi;
+use App\Infrastructure\Traits\ApiPaginator;
 use App\Tenant\Location\Domain\Resources\StateLiteResource;
 use App\Tenant\Location\Domain\Resources\StateResource;
 

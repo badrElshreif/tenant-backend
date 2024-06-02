@@ -7,6 +7,7 @@ use App\Infrastructure\Models\Passport\PassportClient;
 use App\Infrastructure\Models\Passport\PassportRefreshToken;
 use App\Infrastructure\Models\Passport\PassportToken;
 use App\Infrastructure\Models\Passport\PersonalAccessClient;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
 
@@ -33,7 +34,6 @@ class AppServiceProvider extends ServiceProvider
         Passport::usePersonalAccessClientModel(PersonalAccessClient::class);
 
 
-
         Passport::tokensExpireIn(now()->addDays(15));
         Passport::refreshTokensExpireIn(now()->addDays(30));
         Passport::personalAccessTokensExpireIn(now()->addMonths(6));
@@ -43,6 +43,11 @@ class AppServiceProvider extends ServiceProvider
             'tenant-user' => 'User Store Type',
             'tenant-vendor' => 'Vendor Store Type',
         ]);
+
+
+        Gate::before(function ($user, $ability) {
+            return $user->is_super_admin;
+        });
 
     }
 }

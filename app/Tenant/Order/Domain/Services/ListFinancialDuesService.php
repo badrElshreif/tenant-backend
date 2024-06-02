@@ -17,7 +17,7 @@ use DB;
 use App\Tenant\Order\Domain\Filters\OrderFilter;
 use Symfony\Component\HttpFoundation\Response;
 use App\Tenant\Order\Domain\Resources\FinancialDuesResource;
-use App\Infrastructure\Helpers\Traits\ApiPaginator;
+use App\Infrastructure\Traits\ApiPaginator;
 
 class ListFinancialDuesService extends Service
 {

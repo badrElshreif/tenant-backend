@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Exceptions;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 use Throwable;
@@ -27,11 +28,13 @@ class Handler extends ExceptionHandler
         // ... other exceptions
     ];
 
-    public function render($request, Throwable $exception)
+    public function render($request, \Throwable $exception)
     {
-        if ($exception instanceof NotFoundHttpException) {
+
+        if ($exception instanceof ModelNotFoundException) {
+            dd("fff");
             if($request->acceptsJson()){
-                dd("fff");
+
             }
         }
 

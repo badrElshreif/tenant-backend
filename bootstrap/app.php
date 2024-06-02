@@ -43,7 +43,14 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e, \Illuminate\Http\Request $request) {
+            if ($request->acceptsJson()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Record not found.'
+                ], 404);
+            }
+        });
     })->withCommands([
         \App\Infrastructure\Console\Commands\CreateTenant::class,
         \App\Infrastructure\Console\Commands\TenantPassport::class,

@@ -5,8 +5,8 @@ namespace App\Tenant\Store\Responders;
 use App\Infrastructure\Responders\Responder;
 use App\Tenant\Store\Domain\Resources\StoreResource;
 use App\Tenant\Store\Domain\Resources\StoreLiteResource;
-use App\Infrastructure\Helpers\Traits\RESTApi;
-use App\Infrastructure\Helpers\Traits\ApiPaginator;
+use App\Infrastructure\Traits\RESTApi;
+use App\Infrastructure\Traits\ApiPaginator;
 use Symfony\Component\HttpFoundation\Response;
 
 class StoreResponder extends Responder

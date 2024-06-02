@@ -5,8 +5,8 @@ namespace App\Tenant\Order\Responders;
 use App\Infrastructure\Responders\Responder;
 use App\Tenant\Order\Domain\Resources\PaymentLiteResource;
 use App\Tenant\Order\Domain\Resources\PaymentResource;
-use App\Infrastructure\Helpers\Traits\RESTApi;
-use App\Infrastructure\Helpers\Traits\ApiPaginator;
+use App\Infrastructure\Traits\RESTApi;
+use App\Infrastructure\Traits\ApiPaginator;
 use Symfony\Component\HttpFoundation\Response;
 
 class PaymentResponder extends Responder

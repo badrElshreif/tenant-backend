@@ -8,7 +8,7 @@ use App\Tenant\Order\Domain\Models\Cart;
 use App\AppContent\Domain\Models\Setting;
 use Symfony\Component\HttpFoundation\Response;
 use App\Tenant\Order\Domain\Resources\CartResource;
-use App\Infrastructure\Helpers\Traits\ApiPaginator;
+use App\Infrastructure\Traits\ApiPaginator;
 
 class ListUserCartService extends Service
 {

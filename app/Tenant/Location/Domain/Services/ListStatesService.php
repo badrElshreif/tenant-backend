@@ -23,12 +23,12 @@ class ListStatesService extends Service
         $order = isset($data['orderBy']) ? $data['orderBy'] : 'id';
         $order_type = isset($data['orderType']) ? $data['orderType'] : 'DESC';
         $limit = isset($data['per_page']) ? $data['per_page'] : config('app.pagination_limit');
-        $active = isset($data['active']) ? $data['active'] : 1;
+        $active = isset($data['is_active']) ? $data['is_active'] : 1;
         $cities = isset($data['cities']) ? $data['cities'] : 0;
         $country_id = $data['country_id'] ?? null;
-        if (isset($data['active']) && $data['active'] == 'true')
+        if (isset($data['is_active']) && $data['is_active'] == 'true')
             $active = 1;
-        if (isset($data['active']) && $data['active'] == 'false')
+        if (isset($data['is_active']) && $data['is_active'] == 'false')
             $active = 0;
 
         if (isset($data['is_paginated']) && $data['is_paginated'] == 1):
@@ -55,11 +55,8 @@ class ListStatesService extends Service
                     $q->where('is_active', 1);
                 })
                 ->paginate($limit);
-            return new GenericPayload($states, Response::HTTP_ACCEPTED);
+            return new GenericPayload($states, Response::HTTP_OK);
         else:
-            // if(auth('admin')->check())
-            //     $states = $this->state->filter($this->filter)->get();
-            // else
             $states = $this->state->filter($this->filter)->active(1)
                 ->whereHas('country', function ($q) {
                     $q->where('is_active', 1);
@@ -67,11 +64,11 @@ class ListStatesService extends Service
                 ->when(isset($country_id), function ($collection) use ($country_id) {
                     return $collection->where('country_id', $country_id);
                 })
-                ->when(!auth('admin')->check() || $cities == 1, function ($collection) {
-                    return $collection->whereHas('cities', function ($q) {
-                        $q->where('is_active', 1);
-                    });
-                })
+//                ->when(!auth('admin')->check() || $cities == 1, function ($collection) {
+//                    return $collection->whereHas('cities', function ($q) {
+//                        $q->where('is_active', 1);
+//                    });
+//                })
                 ->get();
 
             return new GenericPayload($states, Response::HTTP_OK);

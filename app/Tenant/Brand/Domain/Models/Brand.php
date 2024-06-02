@@ -2,7 +2,7 @@
 
 namespace App\Tenant\Brand\Domain\Models;
 
-use App\Infrastructure\Helpers\Traits\UploaderHelper;
+use App\Infrastructure\Traits\UploaderHelper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Astrotomic\Translatable\Translatable;

@@ -11,7 +11,7 @@ class CreateTenantFormRequest extends CustomApiRequest
 
         return [
             'name' => 'required|string|min:3|max:20',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users,email,id',
             'password' => 'required|min:8',
         ];
     }

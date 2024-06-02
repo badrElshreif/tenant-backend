@@ -4,7 +4,7 @@ namespace App\Tenant\Admin\Responders;
 
 use App\Infrastructure\Responders\Responder;
 use App\Tenant\Admin\Domain\Resources\AdminResource;
-use App\Infrastructure\Helpers\Traits\RESTApi;
+use App\Infrastructure\Traits\RESTApi;
 
 class UpdateProfileResponder extends Responder
 {

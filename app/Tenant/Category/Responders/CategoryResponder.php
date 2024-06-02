@@ -5,8 +5,8 @@ namespace App\Tenant\Category\Responders;
 use App\Infrastructure\Responders\Responder;
 use App\Tenant\Category\Domain\Resources\CategoryResource;
 use App\Tenant\Category\Domain\Resources\CategoryLiteResource;
-use App\Infrastructure\Helpers\Traits\RESTApi;
-use App\Infrastructure\Helpers\Traits\ApiPaginator;
+use App\Infrastructure\Traits\RESTApi;
+use App\Infrastructure\Traits\ApiPaginator;
 use Symfony\Component\HttpFoundation\Response;
 
 class CategoryResponder extends Responder

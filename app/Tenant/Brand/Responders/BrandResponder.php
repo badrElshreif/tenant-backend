@@ -5,8 +5,8 @@ namespace App\Tenant\Brand\Responders;
 use App\Infrastructure\Responders\Responder;
 use App\Tenant\Brand\Domain\Resources\BrandResource;
 use App\Tenant\Brand\Domain\Resources\BrandLiteResource;
-use App\Infrastructure\Helpers\Traits\RESTApi;
-use App\Infrastructure\Helpers\Traits\ApiPaginator;
+use App\Infrastructure\Traits\RESTApi;
+use App\Infrastructure\Traits\ApiPaginator;
 use Symfony\Component\HttpFoundation\Response;
 
 class BrandResponder extends Responder

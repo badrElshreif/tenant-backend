@@ -5,8 +5,8 @@ namespace App\Tenant\Offer\Responders;
 use App\Infrastructure\Responders\Responder;
 use App\Tenant\Offer\Domain\Resources\OfferResource;
 use App\Tenant\Offer\Domain\Resources\OfferLiteResource;
-use App\Infrastructure\Helpers\Traits\RESTApi;
-use App\Infrastructure\Helpers\Traits\ApiPaginator;
+use App\Infrastructure\Traits\RESTApi;
+use App\Infrastructure\Traits\ApiPaginator;
 use Symfony\Component\HttpFoundation\Response;
 
 class OfferResponder extends Responder
