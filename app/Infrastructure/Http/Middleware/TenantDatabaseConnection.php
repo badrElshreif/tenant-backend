@@ -16,7 +16,7 @@ class TenantDatabaseConnection
             $tenant = $request->tenant;
 
             $tenant = Tenant::where('slug', $tenant)->firstOrFail();
-            //establish connection based on tenant (e.g., tenant_id)
+            //establish connection based on tenant (tenant_id)
             $database = "tenant_{$tenant->id}";
 
             config(["database.connections.tenant.database" => $database]);

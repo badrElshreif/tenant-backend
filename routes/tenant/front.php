@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function (Tenant $tenantInstance) {
     return [
-        'welcome' => "Welcome Tenant (" . request()->tenant . ") Front Apis",
+        'welcome' => "Welcome Tenant (" . $tenantInstance->name . ") Front Apis",
         'tenant' => $tenantInstance,
     ];
 });
