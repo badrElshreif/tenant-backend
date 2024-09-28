@@ -14,9 +14,9 @@ trait HandleGenericMethods
     public function setting($key = null)
     {
         if (is_null($key)) {
-            return optional(\App\AppContent\Domain\Models\Setting::where('key', 'added_tax')->first())->body ?? null;
+            return optional(\App\Tenant\AppContent\Domain\Models\Setting::where('key', 'added_tax')->first())->body ?? null;
         }
-        return optional(\App\AppContent\Domain\Models\Setting::where('key', $key)->first())->body ?? null;
+        return optional(\App\Tenant\AppContent\Domain\Models\Setting::where('key', $key)->first())->body ?? null;
     }
 
     function status($type, $key)

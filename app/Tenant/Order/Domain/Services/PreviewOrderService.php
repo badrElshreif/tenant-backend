@@ -20,7 +20,7 @@ use App\Notifications\OrderNotification;
 use App\Tenant\Order\Domain\Models\BankTransfer;
 use Illuminate\Support\Arr;
 use App\Tenant\Order\Domain\Resources\OrderMobileResource;
-use App\AppContent\Domain\Models\Setting;
+use App\Tenant\AppContent\Domain\Models\Setting;
 use App\Admin\Domain\Models\Admin;
 use App\Tenant\Order\Domain\Models\Transaction;
 use Symfony\Component\HttpFoundation\Response;

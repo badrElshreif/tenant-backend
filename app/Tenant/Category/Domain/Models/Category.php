@@ -10,6 +10,7 @@ use App\Infrastructure\Domain\Filters\Filterable;
 class Category extends Model
 {
     use Translatable, HasFactory, Filterable;
+
     public $translatedAttributes = ['name', 'description'];
     protected $fillable = ['order', 'parent_id', 'image', 'is_active', 'tax_percentage', 'type'];
     protected $casts = [
@@ -26,12 +27,16 @@ class Category extends Model
         return $this->belongsTo(self::class);
     }
 
-    public function childs() {
-        return $this->hasMany(Category::class, 'parent_id', 'id')->withCount('products')->with('childs');
+    public function childs()
+    {
+        return $this->hasMany(Category::class, 'parent_id', 'id')
+            ->withCount('products')->with('childs');
     }
 
-    public function properties() {
-        return $this->belongsToMany('App\Property\Domain\Models\Property')->where('is_active', 1);
+    public function properties()
+    {
+        return $this->belongsToMany('App\Property\Domain\Models\Property')
+            ->where('is_active', 1);
     }
 
     protected function setImageAttribute($value)
@@ -39,10 +44,11 @@ class Category extends Model
         $image = explode("/", $value);
         $this->attributes['image'] = end($image);
     }
+
     protected function getImageAttribute($image)
     {
         if (isset($image)):
-            return \Storage::disk('public')->url('/categories/'.$image);
+            return \Storage::disk('public')->url('/categories/' . $image);
         else:
             return "";
         endif;
@@ -50,9 +56,9 @@ class Category extends Model
 
     public function scopeActive($query, $is_active)
     {
-        if($is_active == 1){
+        if ($is_active == 1) {
             return $query->where('is_active', 1);
-        }else{
+        } else {
             return $query->where('is_active', 0);
         }
     }

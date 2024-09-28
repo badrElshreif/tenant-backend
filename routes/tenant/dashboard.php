@@ -18,7 +18,7 @@ Route::middleware(['auth:tenant-admin'])->group(function () {
     Route::post("/auth/logout", \App\Tenant\Admin\Actions\Auth\LogoutAdminAction::class);
 
     Route::group(["prefix" => "auth/profile"], function () {
-        Route::get("/", function (){
+        Route::get("/", function () {
             return auth()->user();
         });
         Route::put("/", \App\Tenant\Admin\Actions\Auth\UpdateProfileAction::class)->name("admins.update_profile");
@@ -127,6 +127,30 @@ Route::middleware(['auth:tenant-admin'])->group(function () {
         Route::put("/service/{id}", \App\Tenant\Order\Actions\UpdateServiceOrderAction::class)->name("serice_orders.update")->middleware('can:orders.update');
         Route::delete("/{id}", \App\Tenant\Order\Actions\DeleteOrderAction::class)->name("orders.destroy")->middleware('can:orders.delete');
         //Route::post("/{id}/refund", \App\Tenant\Refund\Actions\RefundOrderAction::class)->name("orders.refund")->middleware('can:refunds.create');
+    });
+
+
+    Route::group(["prefix" => "settings"], function () {
+        Route::get("/", \App\Tenant\AppContent\Actions\Setting\GetSettingsAction::class)->name("settings.index")->middleware('can:settings.index');
+        Route::post("/", \App\Tenant\AppContent\Actions\Setting\UpdateSettingsAction::class)->name("settings.store")->middleware('can:settings.index');
+    });
+
+    Route::group(["prefix" => "pages"], function () {
+        Route::get("/", \App\Tenant\AppContent\Actions\Page\ListPagesAction::class)->name("pages.index")->middleware('can:pages.index');
+        Route::get("/{slug}", \App\Tenant\AppContent\Actions\Page\GetPageAction::class)->name("pages.index");
+        Route::put("/{slug}", \App\Tenant\AppContent\Actions\Page\UpdatePageAction::class)->name("pages.update")->middleware('can:pages.index');
+    });
+
+    Route::group(["prefix" => "admins"], function () {
+        Route::get("/", \App\Tenant\Admin\Actions\Admin\ListAdminsAction::class)->name("admins.index")->middleware('can:admins.index');
+        Route::get("/export-to-excel", \App\Tenant\Admin\Actions\Admin\ExportAdminsToExcelAction::class)->name("admins.export")->middleware('can:admins.index');
+        Route::get("/{id}", \App\Tenant\Admin\Actions\Admin\GetAdminAction::class)->name("admins.show");
+        Route::post("/", \App\Tenant\Admin\Actions\Admin\CreateAdminAction::class)->name("admins.store")->middleware('can:admins.create');
+        Route::put("/{id}", \App\Tenant\Admin\Actions\Admin\UpdateAdminAction::class)->name("admins.update")->middleware('can:admins.update');
+        Route::delete("/{id}", \App\Tenant\Admin\Actions\Admin\DeleteAdminAction::class)->name("admins.destroy")->middleware('can:admins.delete');
+        Route::put("/{id}/toggle-status", \App\Tenant\Admin\Actions\Admin\ToggleAdminStatusAction::class)->name("admins.toggle_status")->middleware('can:admins.update');
+        // Route::post("/{id}/permissions", \App\Tenant\Admin\Actions\Admin\AssignPermissionsToAdminAction::class)->name("admins.assignPermissions");
+
     });
 
 });

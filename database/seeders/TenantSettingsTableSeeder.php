@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\AppContent\Domain\Models\Setting;
+use App\Tenant\AppContent\Domain\Models\Setting;
 use Illuminate\Database\Seeder;
 
 class TenantSettingsTableSeeder extends Seeder

@@ -12,9 +12,9 @@ class TenantDatabaseConnection
 
     public function handle($request, Closure $next)
     {
-        if (!empty($request->tenant)) {
-            $tenant = $request->tenant;
 
+        if (!empty($request->tenant) || $request->headers->has('tenant')) {
+            $tenant = $request->tenant ?? $request->header('tenant') ?? "";
             $tenant = Tenant::where('slug', $tenant)->firstOrFail();
             //establish connection based on tenant (tenant_id)
             $database = "tenant_{$tenant->id}";

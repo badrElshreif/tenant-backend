@@ -31,7 +31,7 @@ class ListCategoriesService extends Service
             $is_paginated = 1;
 
         $categories = $this->category->main()->filter($this->filter)
-            ->when($type == 'stores' && !auth('admin')->check(), function($collection){
+            ->when($type == 'admins', function($collection){
                 return $collection->whereHas('childs');
             });
         if( isset($data['is_paginated']) && $data['is_paginated'] == 0 ):

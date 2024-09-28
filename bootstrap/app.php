@@ -12,7 +12,29 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__ . '/../routes/console.php',
         health: '/up',
         then: function () {
-            if (empty(getSubdomain())) {
+            if (!empty(getSubdomain()) || request()->headers->has('tenant')) {
+                //Tenants Routes
+                $route = Route::middleware(['tenant-db-connection']);
+                if (!request()->headers->has('tenant')) {
+                    $route->domain('{tenant}.' . env('APP_DOMAIN'));
+                }
+
+                $route->group(function () {
+
+                    Route::prefix('/')
+                        ->group(__DIR__ . '/../routes/tenant/web.php');
+
+                    //Dashboard apis
+                    Route::prefix('api/dashboard')
+                        ->name('tenant.dashboard.')
+                        ->group(__DIR__ . '/../routes/tenant/dashboard.php');
+
+                    //Front apis
+                    Route::prefix('api')
+                        ->name('tenant.')
+                        ->group(__DIR__ . '/../routes/tenant/front.php');
+                });
+            } else {
                 Route::prefix('/')->group(base_path('routes/web.php'));
 
                 Route::prefix('api')
@@ -23,25 +45,6 @@ return Application::configure(basePath: dirname(__DIR__))
                     ->middleware('api')
                     ->group(base_path('routes/main.php'));
 
-            } else {
-                //Tenants Routes
-                Route::middleware(['tenant-db-connection'])
-                    ->domain('{tenant}.' . env('APP_DOMAIN'))
-                    ->group(function () {
-
-                        Route::prefix('/')
-                            ->group(__DIR__ . '/../routes/tenant/web.php');
-
-                        //Dashboard apis
-                        Route::prefix('api/dashboard')
-                            ->name('tenant.dashboard.')
-                            ->group(__DIR__ . '/../routes/tenant/dashboard.php');
-
-                        //Front apis
-                        Route::prefix('api')
-                            ->name('tenant.')
-                            ->group(__DIR__ . '/../routes/tenant/front.php');
-                    });
             }
         },
     )
@@ -51,14 +54,14 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-//        $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e, \Illuminate\Http\Request $request) {
-//            if ($request->acceptsJson()) {
-//                return response()->json([
-//                    'status' => false,
-//                    'message' => 'Record not found.'
-//                ], 404);
-//            }
-//        });
+        $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e, \Illuminate\Http\Request $request) {
+            if ($request->acceptsJson()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '404 not found.'
+                ], 404);
+            }
+        });
     })->withCommands([
         \App\Infrastructure\Console\Commands\CreateTenant::class,
         \App\Infrastructure\Console\Commands\TenantPassport::class,

@@ -27,7 +27,7 @@ class CategoryRequest extends CustomApiRequest
                         'is_detailed' => ['nullable'],
                         'all' => ['nullable'],
                         'per_page'  => ['nullable', 'numeric', 'gte:1'],
-                        'type' => ['nullable', 'in:stores,centers'],
+                        'type' => ['nullable', 'in:admins,stores'],
                         'category_id' => ['nullable', 'numeric', 'exists:categories,id']
                     ];
                 }

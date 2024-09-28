@@ -5,7 +5,7 @@ namespace App\Tenant\Order\Domain\Services\Cart;
 use App\Infrastructure\Domain\Payloads\GenericPayload;
 use App\Infrastructure\Domain\Services\Service;
 use App\Tenant\Order\Domain\Models\Cart;
-use App\AppContent\Domain\Models\Setting;
+use App\Tenant\AppContent\Domain\Models\Setting;
 use Symfony\Component\HttpFoundation\Response;
 use App\Tenant\Order\Domain\Resources\CartResource;
 use App\Infrastructure\Traits\ApiPaginator;

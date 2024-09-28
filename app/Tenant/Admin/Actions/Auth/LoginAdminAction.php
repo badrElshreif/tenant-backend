@@ -8,6 +8,9 @@ use App\Tenant\Admin\Responders\LoginAdminResponder;
 
 class LoginAdminAction
 {
+    private $responder;
+    private $services;
+
     public function __construct(LoginAdminResponder $responder, LoginAdminService $services)
     {
         $this->responder = $responder;

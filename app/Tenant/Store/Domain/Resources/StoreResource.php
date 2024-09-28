@@ -18,7 +18,7 @@ class StoreResource extends JsonResource
     public function toArray($request)
     {
 
-    $setting = \App\AppContent\Domain\Models\Setting::whereIn('key', ['application_dues', 'delivery_charge'])->select('key', 'body')->get();
+    $setting = \App\Tenant\AppContent\Domain\Models\Setting::whereIn('key', ['application_dues', 'delivery_charge'])->select('key', 'body')->get();
 
         return [
             'image' => $this->image,

@@ -12,18 +12,18 @@ class ToggleCategoryStatusService extends Service
 {
     public function handle($data = [])
     {
+        $category = Category::findOrFail($data['category_id']);
         try {
-            $category = Category::findOrFail($data['category_id']);
-            if($category->is_active){
-                if($category->parent_id != null || $category->type == 'centers'){
-                    if(count($category->products()->active(1)->get()) > 0)
+            if ($category->is_active) {
+                if ($category->parent_id != null || $category->type == 'centers') {
+                    if (count($category->products()->active(1)->get()) > 0)
                         return new GenericPayload(
-                             __('error.cannotDeactivate'), 422
+                            __('error.cannotDeactivate'), 422
                         );
-                }else{
-                    if(count($category->childs()->active(1)->get()) > 0)
+                } else {
+                    if (count($category->childs()->active(1)->get()) > 0)
                         return new GenericPayload(
-                             __('error.cannotDeactivate'), 422
+                            __('error.cannotDeactivate'), 422
                         );
                 }
             }
@@ -31,9 +31,7 @@ class ToggleCategoryStatusService extends Service
                 'is_active' => !$category->is_active
             ]);
             return new GenericPayload($category, Response::HTTP_CREATED);
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
-            throw new ModelNotFoundException;
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             return new GenericPayload(
                 __('error.someThingWrong'), 422
             );

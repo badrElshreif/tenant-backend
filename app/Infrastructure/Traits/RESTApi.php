@@ -28,7 +28,10 @@ trait RESTApi
     public function sendError($errorObject, $statusCode = Response::HTTP_UNPROCESSABLE_ENTITY, $errorKey = 'errors')
     {
         $errorResponse['status'] = false;
-        $errorResponse['message'] = is_array($errorObject->messages()) ? $errorObject->first() : $errorObject;
+        if (is_object($errorObject)) {
+            $errorResponse['message'] = is_array($errorObject->messages()) ? $errorObject->first() : $errorObject;
+        }
+
         $errorResponse[$errorKey] = $errorObject;
         return response()->json($errorResponse, $statusCode);
     }

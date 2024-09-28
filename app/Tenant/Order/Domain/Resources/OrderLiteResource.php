@@ -5,7 +5,7 @@ namespace App\Tenant\Order\Domain\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\User\Domain\Resources\UserLiteResource;
 use App\User\Domain\Resources\UserAddressResource;
-use App\AppContent\Domain\Models\Setting;
+use App\Tenant\AppContent\Domain\Models\Setting;
 use App\Infrastructure\Domain\Resources\GenericNameResource;
 
 class OrderLiteResource extends JsonResource

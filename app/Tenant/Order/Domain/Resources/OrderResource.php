@@ -8,7 +8,7 @@ use App\Refund\Domain\Resources\RefundResource;
 use App\User\Domain\Resources\UserAddressResource;
 use App\PromoCode\Domain\Resources\PromoCodeLiteResource;
 use App\Infrastructure\Domain\Resources\GenericNameResource;
-use App\AppContent\Domain\Models\Setting;
+use App\Tenant\AppContent\Domain\Models\Setting;
 
 class OrderResource extends JsonResource
 {
