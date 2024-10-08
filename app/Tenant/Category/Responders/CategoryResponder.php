@@ -40,15 +40,16 @@ class CategoryResponder extends Responder
 
         if ($this->response->getStatus() == Response::HTTP_ACCEPTED) {
             if (request()->is_paginated == 1) {
-                return $this->getPaginatedResponse(
+                return $this->sendJson($this->getPaginatedResponse(
                     $this->response->getData(),
                     CategoryResource::collection($this->response->getData())
-                );
+                ));
             }
             return $this->sendJson(
-                CategoryLiteResource::collection($this->response->getData())->resource
+                CategoryResource::collection($this->response->getData())->resource
             );
         }
+
 
 //        if($this->response->getStatus() == Response::HTTP_ACCEPTED)
 //            return $this->sendJson(
@@ -59,7 +60,7 @@ class CategoryResponder extends Responder
 //            );
 
         if($this->response->getStatus() == Response::HTTP_NO_CONTENT)
-            return $this->sendJson($this->response->getData(), $this->response->getStatus());
+            return $this->sendJson($this->response->getData(),  Response::HTTP_OK);
 
         if($this->response->getStatus() == Response::HTTP_RESET_CONTENT)
             return $this->response->getData();

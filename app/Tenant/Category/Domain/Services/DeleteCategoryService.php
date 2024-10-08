@@ -14,14 +14,14 @@ class DeleteCategoryService extends Service
         $category = Category::findOrFail($data['category_id']);
         try {
             if ($category->parent_id != null || $category->type == 'centers') {
-                if (count($category->products()->get()) > 0)
-                    return new GenericPayload(
-                        __('error.cannotDelete'), 422
-                    );
+//                if (count($category->products()->get()) > 0)
+//                    return new GenericPayload(
+//                        __('error.cannotDelete'), 422
+//                    );
             } else {
                 if (count($category->childs()->get()) > 0)
                     return new GenericPayload(
-                        __('error.cannotDelete'), 422
+                        __('error.cannotDeleteHasSubCategories'), 422
                     );
             }
             $category->delete();
@@ -32,5 +32,5 @@ class DeleteCategoryService extends Service
             );
         }
     }
-    
+
 }

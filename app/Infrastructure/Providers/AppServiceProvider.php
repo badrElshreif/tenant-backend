@@ -10,6 +10,8 @@ use App\Infrastructure\Models\Passport\PersonalAccessClient;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -47,6 +49,12 @@ class AppServiceProvider extends ServiceProvider
 
         Gate::before(function ($user, $ability) {
             return $user->is_super_admin;
+        });
+
+        Factory::guessFactoryNamesUsing(function (string $model_name) {
+            $namespace = 'Database\\Factories\\';
+            $model_name = Str::afterLast($model_name, '\\');
+            return $namespace . $model_name . 'Factory';
         });
 
     }

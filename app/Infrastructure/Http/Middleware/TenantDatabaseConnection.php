@@ -37,6 +37,6 @@ class TenantDatabaseConnection
             return $response;
         }
 
-        return $next($request);;
+        return $next($request);
     }
 }

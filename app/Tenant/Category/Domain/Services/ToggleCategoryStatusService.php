@@ -21,10 +21,10 @@ class ToggleCategoryStatusService extends Service
                             __('error.cannotDeactivate'), 422
                         );
                 } else {
-                    if (count($category->childs()->active(1)->get()) > 0)
-                        return new GenericPayload(
-                            __('error.cannotDeactivate'), 422
-                        );
+//                    if (count($category->childs()->active(1)->get()) > 0)
+//                        return new GenericPayload(
+//                            __('error.cannotDeactivate'), 422
+//                        );
                 }
             }
             $category->update([

@@ -12,10 +12,11 @@ trait RESTApi
      * @param $responseObject , $responseKey, $statusCode
      * @return \Illuminate\Http\JsonResponse
      */
-    public function sendJson($responseObject, $statusCode = Response::HTTP_OK, $responseKey = 'response')
+    public function sendJson($responseObject, $statusCode = Response::HTTP_OK, $message = 'success')
     {
+        $responseArr['message'] = $message;
         $responseArr['status'] = true;
-        $responseArr['data'] = $responseObject;
+        $responseArr['result'] = $responseObject;
         return response()->json($responseArr, $statusCode);
     }
 

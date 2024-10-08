@@ -65,4 +65,5 @@ return Application::configure(basePath: dirname(__DIR__))
     })->withCommands([
         \App\Infrastructure\Console\Commands\CreateTenant::class,
         \App\Infrastructure\Console\Commands\TenantPassport::class,
+        \App\Infrastructure\Console\Commands\SeedTenant::class,
     ])->create();

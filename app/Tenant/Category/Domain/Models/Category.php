@@ -2,6 +2,7 @@
 
 namespace App\Tenant\Category\Domain\Models;
 
+use App\Tenant\Product\Domain\Models\Product;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Astrotomic\Translatable\Translatable;
@@ -19,7 +20,7 @@ class Category extends Model
 
     public function products()
     {
-        return $this->hasMany('App\Product\Domain\Models\Product', 'category_id', 'id');
+        return $this->hasMany(Product::class, 'category_id', 'id');
     }
 
     public function parent()

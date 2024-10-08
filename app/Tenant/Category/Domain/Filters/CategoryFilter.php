@@ -30,7 +30,8 @@ class CategoryFilter extends QueryFilter
         $this->builder->whereHas('translations', function($q) use ($search) {
             $q->where('name', 'like', '%' . $search . '%');
         })
-        ->orWhere('created_at', 'like', '%'.$search.'%');
+        ->orWhere('created_at', 'like', '%'.$search.'%')
+        ->orWhere('id', 'like', '%'.$search.'%');
     }
 
     public function orderBy($orderBy)

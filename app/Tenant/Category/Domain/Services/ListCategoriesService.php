@@ -27,55 +27,55 @@ class ListCategoriesService extends Service
         $active = isset($data['active']) ? $data['active'] : 1;
         $is_paginated = isset($data['is_paginated']) ? $data['is_paginated'] : 1;
         $all = isset($data['all']) ? $data['is_paginated'] : 0;
-        if($is_paginated == 'true')
+        if ($is_paginated == 'true')
             $is_paginated = 1;
 
         $categories = $this->category->main()->filter($this->filter)
-            ->when($type == 'admins', function($collection){
+            ->when($type == 'admins', function ($collection) {
                 return $collection->whereHas('childs');
             });
-        if( isset($data['is_paginated']) && $data['is_paginated'] == 0 ):
+        if (isset($data['is_paginated']) && $data['is_paginated'] == 0):
             $categories = $categories->active(1)
-            ->when($type == 'stores' && $data['all'] == 0, function($collection){
+                ->when($type == 'stores' && $data['all'] == 0, function ($collection) {
                     return $collection->whereHas('childs');
                 })
-            ->orderBy($order, $order_type)->get();
+                ->orderBy($order, $order_type)->get();
             return new GenericPayload($categories, Response::HTTP_OK);
         else:
-            if( !isset($data['is_paginated'])):
+            if (!isset($data['is_paginated'])):
                 $categories = $categories->active(1)
 //                ->when($type == 'stores', function($collection){
 //                    return $collection->whereHas('childs');
 //                })
-                ->when($type == 'stores' && !auth('store')->check() && !auth('admin')->check(), function($collection){
-                    return $collection->whereHas('childs')
-                    ->whereHas('childs.products', function($q) {
-                        $q->where('is_active', 1);
-                    });
-                })
-                ->orderBy('order', 'ASC');
+                    ->when($type == 'stores' && !auth('store')->check() && !auth('admin')->check(), function ($collection) {
+                        return $collection->whereHas('childs')
+                            ->whereHas('childs.products', function ($q) {
+                                $q->where('is_active', 1);
+                            });
+                    })
+                    ->orderBy('order', 'ASC');
                 return new GenericPayload($categories->get(), Response::HTTP_OK);
             else:
-                if( $is_paginated == 0 || $is_paginated == 'false'){
+                if ($is_paginated == 0 || $is_paginated == 'false') {
                     //dd($is_paginated);
                     $categories = $categories->active(1)->orderBy('order', 'ASC')->paginate($limit);
                     return new GenericPayload($categories, Response::HTTP_ACCEPTED);
-                } else{
+                } else {
                     //dd($is_paginated);
                     $categories = $categories
-                        ->when(isset($data['active']), function($collection) use ($active){
+                        ->when(isset($data['active']), function ($collection) use ($active) {
                             return $collection->active($active);
                         })
-                        ->when($order == 'name', function($collection) use ($order_type){
+                        ->when($order == 'name', function ($collection) use ($order_type) {
                             return $collection->join('category_translations', function ($join) {
                                 $join->on('categories.id', '=', 'category_translations.category_id')
                                     ->where('category_translations.locale', '=', app()->getLocale());
                             })
-                            ->groupBy('categories.id')
-                            ->orderBy('category_translations.name', $order_type)
-                            ->select('categories.*', 'category_translations.id as category_translation_id');
+                                ->groupBy('categories.id')
+                                ->orderBy('category_translations.name', $order_type)
+                                ->select('categories.*', 'category_translations.id as category_translation_id');
                         })
-                        ->when($order != 'name', function($collection) use ($order, $order_type){
+                        ->when($order != 'name', function ($collection) use ($order, $order_type) {
                             return $collection->orderBy($order, $order_type);
                         })
                         ->paginate($limit);
