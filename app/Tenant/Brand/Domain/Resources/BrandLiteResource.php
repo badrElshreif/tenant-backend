@@ -19,7 +19,7 @@ class BrandLiteResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
-            'image' => $this->logo_url(300,300),
+            'image' => $this->logo_url(150,150),
             'is_active' => $this->is_active,
             'created_at' => \Carbon\Carbon::parse($this->created_at)->translatedFormat('d M Y')
         ];

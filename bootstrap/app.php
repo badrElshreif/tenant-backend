@@ -33,6 +33,10 @@ return Application::configure(basePath: dirname(__DIR__))
                     Route::prefix('api')
                         ->name('tenant.')
                         ->group(__DIR__ . '/../routes/tenant/front.php');
+
+                    Route::prefix('/')
+                        ->name('tenant.')
+                        ->group(__DIR__ . '/../routes/tenant/storage.php');
                 });
             } else {
                 Route::prefix('/')->group(base_path('routes/web.php'));
@@ -46,6 +50,7 @@ return Application::configure(basePath: dirname(__DIR__))
                     ->group(base_path('routes/main.php'));
 
             }
+
         },
     )
     ->withMiddleware(function (Middleware $middleware) {

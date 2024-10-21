@@ -22,9 +22,9 @@ trait UploaderHelper
     {
         $extention = $file->extension();
         $fileName = $this->generateFileRandomName($extention);
-        Storage::disk('public')->put($folderName . '/' . $fileName, File::get($file));
+        $tenantDir = getTenant()->slug;
+        Storage::disk('public')->put($tenantDir . "/" . $folderName . '/' . $fileName, File::get($file));
         // $fullPath = $this->getFileFullPath($fileName, $folderName);
-
         return $fileName;
     }
 

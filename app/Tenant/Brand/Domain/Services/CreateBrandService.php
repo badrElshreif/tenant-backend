@@ -14,7 +14,7 @@ class CreateBrandService extends Service
         $data['is_active'] = isset($data['is_active']) ? $data['is_active'] : 1;
         $data['image'] = (new Brand)->handleUploadImg($data['image']);
         $brand = Brand::create($data);
-        return new GenericPayload($brand, Response::HTTP_CREATED);
+        return new GenericPayload($brand, Response::HTTP_OK);
 
     }
 }

@@ -23,6 +23,8 @@ class BrandResponder extends Responder
                     $this->response->getData(),
                     BrandLiteResource::collection($this->response->getData())
                 ));
+            }else{
+                return $this->sendJson($this->response->getData(), 200);
             }
             return $this->sendJson(
                 BrandLiteResource::collection($this->response->getData()),

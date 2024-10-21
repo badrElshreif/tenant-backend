@@ -3,6 +3,8 @@
 namespace App\Tenant\Brand\Domain\Models;
 
 use App\Infrastructure\Traits\UploaderHelper;
+use App\Main\Tenant\Domain\Models\Tenant;
+use App\Tenant\Product\Domain\Models\Product;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Astrotomic\Translatable\Translatable;
@@ -21,7 +23,7 @@ class Brand extends Model
 
     public function products()
     {
-        return $this->hasMany('App\Product\Domain\Models\Product', 'brand_id', 'id');
+        return $this->hasMany(Product::class, 'brand_id', 'id');
     }
 
     public function scopeActive($query, $is_active)
@@ -52,7 +54,9 @@ class Brand extends Model
     public function logo_url($w, $h)
     {
         if (isset($this->image)):
-            return route('image.resize', [$w, $h, 'uploads', $this->image]);
+            return route('tenant.image.resize',
+                [getTenant()->slug, $w, $h, 'uploads', $this->image]
+            );
         else:
             return asset("assets/images/default/default-logo.png");
         endif;
