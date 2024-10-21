@@ -16,12 +16,15 @@ class TenantDatabaseConnection
         if (!empty($request->tenant) || $request->headers->has('tenant')) {
             $tenant = $request->tenant ?? $request->header('tenant') ?? "";
             $tenant = Tenant::where('slug', $tenant)->firstOrFail();
+
             //establish connection based on tenant (tenant_id)
             $database = "tenant_{$tenant->id}";
 
             config(["database.connections.tenant.database" => $database]);
             config(['database.default' => 'tenant']);
             config(["passport.connection" => 'tenant']);
+
+            config(["telescope.storage.database.connection" => "tenant"]);
 
             DB::purge('tenant');
             DB::reconnect('tenant');
@@ -34,8 +37,10 @@ class TenantDatabaseConnection
             $request->route()->forgetParameter('tenant');
             $response = $next($request);
             DB::disconnect("tenant");
+
             return $response;
         }
+
 
         return $next($request);
     }

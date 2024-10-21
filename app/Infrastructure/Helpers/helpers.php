@@ -30,3 +30,8 @@ if (!function_exists('getDomain')) {
         }
     }
 }
+
+function getTenant()
+{
+    return app(\App\Main\Tenant\Domain\Models\Tenant::class);
+}

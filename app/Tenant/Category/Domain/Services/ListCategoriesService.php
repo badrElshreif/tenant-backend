@@ -30,14 +30,19 @@ class ListCategoriesService extends Service
         if ($is_paginated == 'true')
             $is_paginated = 1;
 
-        $categories = $this->category->main()->filter($this->filter)
-            ->when($type == 'admins', function ($collection) {
-                return $collection->whereHas('childs');
-            });
+        if(isset($data['main_category'])){
+            $categories = $this->category->main()->filter($this->filter)
+                ->when($type == 'admins', function ($collection) {
+                    return $collection->whereHas('childs');
+                });
+        }else{
+            $categories = $this->category->filter($this->filter);
+        }
+
         if (isset($data['is_paginated']) && $data['is_paginated'] == 0):
             $categories = $categories->active(1)
                 ->when($type == 'stores' && $data['all'] == 0, function ($collection) {
-                    return $collection->whereHas('childs');
+                  //  return $collection->whereHas('childs');
                 })
                 ->orderBy($order, $order_type)->get();
             return new GenericPayload($categories, Response::HTTP_OK);

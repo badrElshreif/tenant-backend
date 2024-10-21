@@ -30,7 +30,7 @@ class ListBrandsService extends Service
             $brands = $brands->active(1);
 
             if (!isset($data['without_has_products'])) {
-                $brands = $brands->when(!auth('admin')->check(), function ($collection) {
+                $brands = $brands->when(!auth('tenant-admin')->check(), function ($collection) {
                     return $collection->whereHas('products', function ($q) {
                         $q->where(['is_active' => 1, 'approved' => 1])->where('quantity', '>', 0)
                             ->whereHas('store', function ($qq) {
@@ -58,7 +58,7 @@ class ListBrandsService extends Service
                 ->when($order != 'name', function ($collection) use ($order, $order_type) {
                     return $collection->orderBy($order, $order_type);
                 });
-            if (!auth('admin')->check())
+            if (!auth('tenant-admin')->check())
                 $brands = $brands->whereHas('products', function ($q) {
                     $q->where(['is_active' => 1, 'approved' => 1])->where('quantity', '>', 0)
                         // ;

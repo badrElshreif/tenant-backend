@@ -15,10 +15,10 @@ class CategoryResponder extends Responder
 
     public function respond()
     {
-        if(!in_array($this->response->getStatus(), array_values(config('statuses.SUCCESS'))))
+        if (!in_array($this->response->getStatus(), array_values(config('statuses.SUCCESS'))))
             return $this->sendError($this->response->getData());
 
-        if($this->response->getStatus() == Response::HTTP_CREATED)
+        if ($this->response->getStatus() == Response::HTTP_CREATED)
             return $this->sendJson(
                 new CategoryResource($this->response->getData()),
                 Response::HTTP_OK
@@ -31,11 +31,21 @@ class CategoryResponder extends Responder
                     $this->response->getData(),
                     CategoryLiteResource::collection($this->response->getData())
                 );
+            } else if (request()->main_category == 1) {
+                return $this->sendJson(
+                    CategoryLiteResource::collection($this->response->getData()),
+                    $this->response->getStatus()
+                );
             }
+
             return $this->sendJson(
-                CategoryLiteResource::collection($this->response->getData()),
+                new CategoryResource($this->response->getData()),
                 $this->response->getStatus()
             );
+//            return $this->sendJson(
+//                CategoryLiteResource::collection($this->response->getData()),
+//                $this->response->getStatus()
+//            );
         }
 
         if ($this->response->getStatus() == Response::HTTP_ACCEPTED) {
@@ -59,10 +69,10 @@ class CategoryResponder extends Responder
 //                ), Response::HTTP_OK
 //            );
 
-        if($this->response->getStatus() == Response::HTTP_NO_CONTENT)
-            return $this->sendJson($this->response->getData(),  Response::HTTP_OK);
+        if ($this->response->getStatus() == Response::HTTP_NO_CONTENT)
+            return $this->sendJson($this->response->getData(), Response::HTTP_OK);
 
-        if($this->response->getStatus() == Response::HTTP_RESET_CONTENT)
+        if ($this->response->getStatus() == Response::HTTP_RESET_CONTENT)
             return $this->response->getData();
 
     }

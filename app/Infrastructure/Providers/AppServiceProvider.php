@@ -7,6 +7,8 @@ use App\Infrastructure\Models\Passport\PassportClient;
 use App\Infrastructure\Models\Passport\PassportRefreshToken;
 use App\Infrastructure\Models\Passport\PassportToken;
 use App\Infrastructure\Models\Passport\PersonalAccessClient;
+use App\Main\Tenant\Domain\Models\Tenant;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
@@ -28,6 +30,26 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+
+        if (!empty(getSubdomain())) {
+            $tenant = getSubdomain() ?? "";
+            $tenant = Tenant::where('slug', $tenant)->firstOrFail();
+
+
+            //establish connection based on tenant (tenant_id)
+            $database = "tenant_{$tenant->id}";
+
+            config(["database.connections.tenant.database" => $database]);
+            config(['database.default' => 'tenant']);
+            config(["passport.connection" => 'tenant']);
+
+            config(["telescope.storage.database.connection" => "tenant"]);
+
+            DB::purge('tenant');
+            DB::reconnect('tenant');
+
+            app()->instance(Tenant::class, $tenant);
+        }
 
         Passport::useTokenModel(PassportToken::class);
         Passport::useRefreshTokenModel(PassportRefreshToken::class);
