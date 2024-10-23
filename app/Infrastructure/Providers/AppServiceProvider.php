@@ -14,6 +14,7 @@ use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -78,6 +79,23 @@ class AppServiceProvider extends ServiceProvider
             $model_name = Str::afterLast($model_name, '\\');
             return $namespace . $model_name . 'Factory';
         });
+
+        // Specify the main folder you want to migrate from
+        $migrationsPath = database_path('migrations/tenant');
+
+        if (File::exists($migrationsPath)) {
+            // Recursively get all migration files from the specific folder and its subfolders
+            $migrationFiles = File::allFiles($migrationsPath);
+            $migrationPaths = [];
+
+            // Convert SplFileInfo objects to the full pathnames
+            foreach ($migrationFiles as $file) {
+                $migrationPaths[] = $file->getPathname();
+            }
+
+            // Tell Laravel to load migrations from these paths
+            $this->loadMigrationsFrom($migrationPaths);
+        }
 
     }
 }

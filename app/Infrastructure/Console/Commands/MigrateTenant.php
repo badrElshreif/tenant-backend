@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
 
 class MigrateTenant extends Command
 {
@@ -26,6 +27,22 @@ class MigrateTenant extends Command
                 '--database' => 'tenant',
                 // '--force' => true,
             ]);
+
+            $migrationsPath = database_path('migrations/tenant');
+
+            if (File::exists($migrationsPath)) {
+                
+                $directories = File::directories($migrationsPath);
+                foreach ($directories as $directory) {
+                    $this->call('migrate', [
+                        '--path' => $directory,
+                        '--database' => 'tenant',
+                        // '--force' => true,
+                    ]);
+                }
+
+            }
+
             // $this->info("migration successfully for $db_name");
         } catch (\Exception $e) {
             $this->error("migration failed for $db_name with an exception");

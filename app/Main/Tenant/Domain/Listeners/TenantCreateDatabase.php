@@ -7,6 +7,7 @@ use App\Tenant\Admin\Domain\Models\Admin;
 use Database\Seeders\TenantDatabaseSeeder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
 class TenantCreateDatabase
@@ -35,6 +36,7 @@ class TenantCreateDatabase
 
         //change db connection with new db
         config(["database.connections.tenant.database" => $db_name]);
+        config(["telescope.storage.database.connection" => "tenant"]);
 
         //run migration files
         //php artisan migrate --path=database/migrations/store -database=tenant
@@ -43,6 +45,18 @@ class TenantCreateDatabase
             '--database' => 'tenant',
             '--force' => true,
         ]);
+
+        $migrationsPath = database_path('migrations/tenant');
+        if (File::exists($migrationsPath)) {
+            $directories = ['telescope',];
+            foreach ($directories as $directory) {
+                Artisan::call('migrate', [
+                    '--path' => 'database/migrations/tenant/'.$directory,
+                    '--database' => 'tenant',
+                    // '--force' => true,
+                ]);
+            }
+        }
 
         if ($tenant) {
             Artisan::call('tenant:install-passport', [

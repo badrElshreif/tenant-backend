@@ -84,7 +84,7 @@ class ListCategoriesService extends Service
                             return $collection->orderBy($order, $order_type);
                         })
                         ->paginate($limit);
-                    return new GenericPayload($categories, Response::HTTP_ACCEPTED);
+                    return new GenericPayload($categories, Response::HTTP_ACCEPTED,"collection_with_pagination");
                 }
             endif;
         endif;
