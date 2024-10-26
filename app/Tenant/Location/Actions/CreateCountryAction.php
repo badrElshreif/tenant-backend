@@ -1,13 +1,14 @@
 <?php
 
 namespace App\Tenant\Location\Actions;
+
+use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Location\Domain\Requests\CountryRequest;
 use App\Tenant\Location\Domain\Services\CreateCountryService;
-use App\Tenant\Location\Responders\CountryResponder;
 
 class CreateCountryAction
 {
-    public function __construct(CountryResponder $responder, CreateCountryService $services)
+    public function __construct(GenericResponder $responder, CreateCountryService $services)
     {
         $this->responder = $responder;
         $this->services = $services;
@@ -17,6 +18,6 @@ class CreateCountryAction
     {
         return $this->responder->withResponse(
             $this->services->handle($request->validated())
-        )->respond();
+        )->getResponseData();
     }
 }

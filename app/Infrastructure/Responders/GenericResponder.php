@@ -13,6 +13,7 @@ class GenericResponder extends Responder implements ResponderInterface
 
     public function respond()
     {
-        return $this->sendJson($this->response->getData(), $this->response->getSatusCode() ?? 200);
+       // return $this->response;
+       // return $this->sendJson($this->response->getData(), $this->response->getSatusCode() ?? 200);
     }
 }

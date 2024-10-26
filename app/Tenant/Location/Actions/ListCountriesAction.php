@@ -17,6 +17,6 @@ class ListCountriesAction
     {
         return $this->responder->withResponse(
             $this->services->handle($request->validated())
-        )->respond();
+        )->getResponseData();
     }
 }

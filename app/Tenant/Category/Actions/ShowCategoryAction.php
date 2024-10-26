@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Tenant\Category\Actions;
+use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Category\Domain\Services\ShowCategoryService;
 use App\Tenant\Category\Responders\CategoryResponder;
 
@@ -16,6 +17,6 @@ class ShowCategoryAction
     {
         return $this->responder->withResponse(
             $this->services->handle(["category_id" => $id])
-        )->respond();
+        )->getResponseData();
     }
 }

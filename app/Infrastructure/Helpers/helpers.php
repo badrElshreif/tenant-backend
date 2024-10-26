@@ -1,5 +1,6 @@
 <?php
 
+use App\Infrastructure\Domain\Payloads\GenericPayload;
 use Illuminate\Support\Str;
 
 if (!function_exists('getSubdomain')) {
@@ -34,4 +35,19 @@ if (!function_exists('getDomain')) {
 function getTenant()
 {
     return app(\App\Main\Tenant\Domain\Models\Tenant::class);
+}
+
+if (!function_exists('responseApi')) {
+    function responseApi($responseType, $data, $statusCode = 200, $resource = null)
+    {
+        return (new \App\Infrastructure\Responders\ResponderX())->getApiResponse($responseType, $data, $statusCode, $resource);
+        // return new GenericPayload($data, $statusCode, $responseType);
+    }
+}
+
+if (!function_exists('responseView')) {
+    function responseView($viewPath, $data, $statusCode = 200, $resource = null)
+    {
+        return (new \App\Infrastructure\Responders\ResponderX())->getViewResponse($viewPath, $data);
+    }
 }

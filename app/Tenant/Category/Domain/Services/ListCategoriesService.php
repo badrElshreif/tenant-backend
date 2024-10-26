@@ -4,8 +4,10 @@ namespace App\Tenant\Category\Domain\Services;
 
 use App\Infrastructure\Domain\Payloads\GenericPayload;
 use App\Infrastructure\Domain\Services\Service;
+use App\Infrastructure\Enums\ResponseType;
 use App\Tenant\Category\Domain\Models\Category;
 use App\Tenant\Category\Domain\Filters\CategoryFilter;
+use App\Tenant\Category\Domain\Resources\CategoryLiteResource;
 use Symfony\Component\HttpFoundation\Response;
 
 class ListCategoriesService extends Service
@@ -30,22 +32,22 @@ class ListCategoriesService extends Service
         if ($is_paginated == 'true')
             $is_paginated = 1;
 
-        if(isset($data['main_category'])){
+        if (isset($data['main_category'])) {
             $categories = $this->category->main()->filter($this->filter)
                 ->when($type == 'admins', function ($collection) {
                     return $collection->whereHas('childs');
                 });
-        }else{
+        } else {
             $categories = $this->category->filter($this->filter);
         }
 
         if (isset($data['is_paginated']) && $data['is_paginated'] == 0):
             $categories = $categories->active(1)
                 ->when($type == 'stores' && $data['all'] == 0, function ($collection) {
-                  //  return $collection->whereHas('childs');
+                    //  return $collection->whereHas('childs');
                 })
                 ->orderBy($order, $order_type)->get();
-            return new GenericPayload($categories, Response::HTTP_OK);
+            return responseX(ResponseType::CollectionList, $categories);
         else:
             if (!isset($data['is_paginated'])):
                 $categories = $categories->active(1)
@@ -59,12 +61,13 @@ class ListCategoriesService extends Service
                             });
                     })
                     ->orderBy('order', 'ASC');
-                return new GenericPayload($categories->get(), Response::HTTP_OK);
+                // return new GenericPayload($categories->get(), Response::HTTP_OK);
+                return responseX(ResponseType::CollectionList, $categories->get());
             else:
                 if ($is_paginated == 0 || $is_paginated == 'false') {
                     //dd($is_paginated);
                     $categories = $categories->active(1)->orderBy('order', 'ASC')->paginate($limit);
-                    return new GenericPayload($categories, Response::HTTP_ACCEPTED);
+                    return responseX(ResponseType::CollectionWithPaginated, $categories, Response::HTTP_ACCEPTED);
                 } else {
                     //dd($is_paginated);
                     $categories = $categories
@@ -84,7 +87,13 @@ class ListCategoriesService extends Service
                             return $collection->orderBy($order, $order_type);
                         })
                         ->paginate($limit);
-                    return new GenericPayload($categories, Response::HTTP_ACCEPTED,"collection_with_pagination");
+
+
+                    //return responseX(ResponseType::CollectionWithPaginated, $categories);
+                    return new GenericPayload($categories,
+                        Response::HTTP_ACCEPTED,
+                        ResponseType::CollectionWithPaginated,
+                        CategoryLiteResource::class);
                 }
             endif;
         endif;

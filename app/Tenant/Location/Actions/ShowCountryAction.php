@@ -17,6 +17,6 @@ class ShowCountryAction
     {
         return $this->responder->withResponse(
             $this->services->handle(["country_id" => $id])
-        )->respond();
+        )->getResponseData();
     }
 }

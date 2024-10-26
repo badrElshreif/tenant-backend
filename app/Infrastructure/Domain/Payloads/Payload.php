@@ -2,17 +2,20 @@
 
 namespace App\Infrastructure\Domain\Payloads;
 
+
 abstract class Payload
 {
     protected $data = [];
 
     protected $status = 200;
     protected $type;
+    protected $resource;
 
-    public function __construct($data = null, $status = null,$type=null)
+    public function __construct($data = null, $status = null, $type = null, $resource = null)
     {
         $this->data = $data;
         $this->type = $type;
+        $this->resource = $resource;
 
         if (isset($status)) {
             $this->status = $status;
@@ -33,4 +36,11 @@ abstract class Payload
     {
         return $this->type;
     }
+
+    public function getResource()
+    {
+        return $this->resource;
+    }
+
+
 }

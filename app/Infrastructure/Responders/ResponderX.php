@@ -1,19 +1,28 @@
 <?php
 
-namespace App\Infrastructure\Traits;
+namespace App\Infrastructure\Responders;
 
+use App\Infrastructure\Domain\Resources\GenericNameResource;
 use App\Infrastructure\Enums\ResponseType;
+use App\Infrastructure\Traits\ApiPaginator;
+use App\Infrastructure\Traits\RESTApi;
 use Symfony\Component\HttpFoundation\Response;
 
-trait RESTApi
+class ResponderX extends Responder
 {
+
     use ApiPaginator;
 
-    /**
-     * Return response with json object
-     * @param $responseObject , $responseKey, $statusCode
-     * @return \Illuminate\Http\JsonResponse
-     */
+    public function respond()
+    {
+
+        return $this->sendJson(
+            GenericNameResource::collection($this->response->getData()),
+            $this->response->getStatus()
+        );
+    }
+
+
     public function sendJson($responseObject, $statusCode = Response::HTTP_OK, $message = 'success')
     {
         $responseArr['message'] = $message;
@@ -23,11 +32,6 @@ trait RESTApi
     }
 
 
-    /**
-     * Return response with error object
-     * @param $errorObject , $errorKey, $statusCode
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function sendError($errorObject, $statusCode = Response::HTTP_UNPROCESSABLE_ENTITY, $errorKey = 'errors')
     {
         $errorResponse['status'] = false;
@@ -51,40 +55,32 @@ trait RESTApi
         return response()->json($responseArr, $statusCode);
     }
 
-    public function getResponseData()
+    public function getApiResponse($type, $data = [], $status = Response::HTTP_OK, $resource = null)
     {
-        $resource = $this->response->getResource();
-        if ($this->response->getType() == ResponseType::CollectionWithPaginated) {
+        if ($type == ResponseType::CollectionWithPaginated) {
             return $this->sendJson($this->getPaginatedResponse(
                 $this->response->getData(),
                 $resource ? $resource::collection($this->response->getData()) : []
             ), $this->response->getStatus());
-        } else if ($this->response->getType() == ResponseType::CollectionList) {
+        } else if ($type == ResponseType::CollectionList) {
             return $this->sendJson(
                 $resource::collection($this->response->getData()),
                 $this->response->getStatus()
             );
-        } else if ($this->response->getType() == ResponseType::SingleResource) {
+        } else if ($type == ResponseType::SingleResource) {
             return $this->sendJson(
-                new $resource($this->response->getData()),
-                $this->response->getStatus()
+                new $resource($data),
+                $status
             );
-        } else if ($this->response->getType() == ResponseType::Error) {
-            return $this->sendError($this->response->getData(), $this->response->getStatus());
+        } else if ($type == ResponseType::Error) {
+            return $this->sendError($data, $status);
         }
-//        else if ($this->response->getType() == ResponseType::View) {
-//            return view("welcome", $this->response->getData());
-//        }
 
-        return $this->sendJson($this->response->getData(), $this->response->getStatus());
+        return $this->sendJson($this->response->getData(), $status);
     }
 
-    public function getView($view)
+    public function getViewResponse($viewPath, $data = [], $resource = null)
     {
-        return view($view, $this->response->getData());
+        return view($viewPath, $data);
     }
-
-
 }
-
-

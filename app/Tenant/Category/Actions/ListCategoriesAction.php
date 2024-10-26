@@ -1,13 +1,14 @@
 <?php
 
 namespace App\Tenant\Category\Actions;
+use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Category\Domain\Requests\CategoryRequest;
 use App\Tenant\Category\Domain\Services\ListCategoriesService;
 use App\Tenant\Category\Responders\CategoryResponder;
 
 class ListCategoriesAction
 {
-    public function __construct(CategoryResponder $responder, ListCategoriesService $services)
+    public function __construct(GenericResponder $responder, ListCategoriesService $services)
     {
         $this->responder = $responder;
         $this->services = $services;
@@ -17,6 +18,6 @@ class ListCategoriesAction
     {
         return $this->responder->withResponse(
             $this->services->handle($request)
-        )->respond();
+        )->getResponseData();
     }
 }
