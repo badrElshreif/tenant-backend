@@ -93,6 +93,7 @@ return [
 
     'middleware' => [
         'tenant-db-connection',
+        \App\Infrastructure\Http\Middleware\RestrictTelescopeAccess::class,
         'web',
         Authorize::class,
     ],
