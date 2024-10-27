@@ -1,12 +1,14 @@
 <?php
 
 namespace App\Tenant\Brand\Actions;
+
+use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Brand\Domain\Services\ToggleBrandStatusService;
 use App\Tenant\Brand\Responders\BrandResponder;
 
 class ToggleBrandStatusAction
 {
-    public function __construct(BrandResponder $responder, ToggleBrandStatusService $services)
+    public function __construct(GenericResponder $responder, ToggleBrandStatusService $services)
     {
         $this->responder = $responder;
         $this->services = $services;
@@ -16,6 +18,6 @@ class ToggleBrandStatusAction
     {
         return $this->responder->withResponse(
             $this->services->handle(["brand_id" => $id])
-        )->respond();
+        )->getResponseData();
     }
 }

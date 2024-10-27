@@ -1,12 +1,14 @@
 <?php
 
 namespace App\Tenant\Location\Actions;
+
+use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Location\Domain\Services\ToggleCountryStatusService;
 use App\Tenant\Location\Responders\CountryResponder;
 
 class ToggleCountryStatusAction
 {
-    public function __construct(CountryResponder $responder, ToggleCountryStatusService $services)
+    public function __construct(GenericResponder $responder, ToggleCountryStatusService $services)
     {
         $this->responder = $responder;
         $this->services = $services;
@@ -16,6 +18,6 @@ class ToggleCountryStatusAction
     {
         return $this->responder->withResponse(
             $this->services->handle(["country_id" => $id])
-        )->respond();
+        )->getResponseData();
     }
 }

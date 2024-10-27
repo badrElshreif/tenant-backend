@@ -1,12 +1,14 @@
 <?php
 
 namespace App\Tenant\Location\Actions;
+
+use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Location\Domain\Services\ShowCityService;
 use App\Tenant\Location\Responders\CityResponder;
 
 class ShowCityAction
 {
-    public function __construct(CityResponder $responder, ShowCityService $services)
+    public function __construct(GenericResponder $responder, ShowCityService $services)
     {
         $this->responder = $responder;
         $this->services = $services;
@@ -16,6 +18,6 @@ class ShowCityAction
     {
         return $this->responder->withResponse(
             $this->services->handle(["city_id" => $id])
-        )->respond();
+        )->getResponseData();
     }
 }

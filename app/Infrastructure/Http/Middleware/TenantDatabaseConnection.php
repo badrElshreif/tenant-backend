@@ -28,9 +28,6 @@ class TenantDatabaseConnection
             config(["telescope.storage.database.connection" => "tenant"]);
             config(["telescope.enabled" => true]);
 
-//            if(Route::has('telescope') && !config('telescope.enabled')) {
-//                abort(403, config('app.name') . ' Telescope is not enabled.');
-//            }
 
             DB::purge('tenant');
             DB::reconnect('tenant');

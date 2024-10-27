@@ -1,13 +1,15 @@
 <?php
 
 namespace App\Tenant\Location\Actions;
+
+use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Location\Domain\Requests\StateRequest;
 use App\Tenant\Location\Domain\Services\UpdateStateService;
 use App\Tenant\Location\Responders\StateResponder;
 
 class UpdateStateAction
 {
-    public function __construct(StateResponder $responder, UpdateStateService $services)
+    public function __construct(GenericResponder $responder, UpdateStateService $services)
     {
         $this->responder = $responder;
         $this->services = $services;
@@ -17,6 +19,6 @@ class UpdateStateAction
     {
         return $this->responder->withResponse(
             $this->services->handle(array_merge($request->validated(), ["state_id" => $id]))
-        )->respond();
+        )->getResponseData();
     }
 }

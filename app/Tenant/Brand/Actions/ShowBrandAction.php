@@ -16,6 +16,6 @@ class ShowBrandAction
     {
         return $this->responder->withResponse(
             $this->services->handle(["brand_id" => $id])
-        )->respond();
+        )->getResponseData();
     }
 }

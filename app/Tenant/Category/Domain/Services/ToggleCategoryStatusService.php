@@ -4,8 +4,10 @@ namespace App\Tenant\Category\Domain\Services;
 
 use App\Infrastructure\Domain\Payloads\GenericPayload;
 use App\Infrastructure\Domain\Services\Service;
+use App\Infrastructure\Enums\ResponseType;
 use App\Tenant\Category\Domain\Models\Category;
 use App\Infrastructure\Exceptions\ModelNotFoundException;
+use App\Tenant\Category\Domain\Resources\CategoryResource;
 use Symfony\Component\HttpFoundation\Response;
 
 class ToggleCategoryStatusService extends Service
@@ -30,7 +32,10 @@ class ToggleCategoryStatusService extends Service
             $category->update([
                 'is_active' => !$category->is_active
             ]);
-            return new GenericPayload($category, Response::HTTP_CREATED);
+
+
+            return new GenericPayload($category, Response::HTTP_OK,
+                ResponseType::SingleResource, CategoryResource::class);
         } catch (\Exception $ex) {
             return new GenericPayload(
                 __('error.someThingWrong'), 422

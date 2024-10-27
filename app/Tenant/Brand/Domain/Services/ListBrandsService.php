@@ -4,8 +4,10 @@ namespace App\Tenant\Brand\Domain\Services;
 
 use App\Infrastructure\Domain\Payloads\GenericPayload;
 use App\Infrastructure\Domain\Services\Service;
+use App\Infrastructure\Enums\ResponseType;
 use App\Tenant\Brand\Domain\Models\Brand;
 use App\Tenant\Brand\Domain\Filters\BrandFilter;
+use App\Tenant\Brand\Domain\Resources\BrandLiteResource;
 use Symfony\Component\HttpFoundation\Response;
 
 class ListBrandsService extends Service
@@ -40,7 +42,10 @@ class ListBrandsService extends Service
                 });
             }
             $brands = $brands->orderBy($order, $order_type)->get();
-            return new GenericPayload($brands, Response::HTTP_OK);
+
+            return new GenericPayload($brands, Response::HTTP_OK
+                , ResponseType::CollectionList, BrandLiteResource::class);
+
         else:
             $brands = $brands
                 ->when(isset($data['active']), function ($collection) use ($active) {
@@ -67,7 +72,9 @@ class ListBrandsService extends Service
                         });
                 });
             $brands = $brands->paginate($limit);
-            return new GenericPayload($brands, Response::HTTP_ACCEPTED);
+
+            return new GenericPayload($brands, Response::HTTP_OK
+                , ResponseType::CollectionWithPaginated, BrandLiteResource::class);
         endif;
     }
 

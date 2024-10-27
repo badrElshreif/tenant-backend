@@ -1,12 +1,13 @@
 <?php
 
 namespace App\Tenant\Category\Actions;
+
+use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Category\Domain\Services\DeleteCategoryService;
-use App\Tenant\Category\Responders\CategoryResponder;
 
 class DeleteCategoryAction
 {
-    public function __construct(CategoryResponder $responder, DeleteCategoryService $services)
+    public function __construct(GenericResponder $responder, DeleteCategoryService $services)
     {
         $this->responder = $responder;
         $this->services = $services;
@@ -16,6 +17,6 @@ class DeleteCategoryAction
     {
         return $this->responder->withResponse(
             $this->services->handle(["category_id" => $id])
-        )->respond();
+        )->getResponseData();
     }
 }

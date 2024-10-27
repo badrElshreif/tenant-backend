@@ -46,7 +46,7 @@ class Country extends Model
 
     public function states()
     {
-        return $this->hasMany('App\Tenant\Location\Domain\Models\State');
+        return $this->hasMany(State::class);
     }
 
     public function addresses()

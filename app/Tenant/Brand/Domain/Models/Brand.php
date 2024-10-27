@@ -38,7 +38,9 @@ class Brand extends Model
     public function getMinImgAttribute()
     {
         if (isset($this->image))
-            return route('image.resize', [80, 80, 'uploads', $this->image]);
+            return route('tenant.image.resize',
+                [getTenant()->slug, 80, 80, 'uploads', $this->image]
+            );
         else
             return asset("assets/images/default/default-logo.png");
     }

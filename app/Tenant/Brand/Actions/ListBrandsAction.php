@@ -1,13 +1,14 @@
 <?php
 
 namespace App\Tenant\Brand\Actions;
+use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Brand\Domain\Requests\BrandRequest;
 use App\Tenant\Brand\Domain\Services\ListBrandsService;
 use App\Tenant\Brand\Responders\BrandResponder;
 
 class ListBrandsAction
 {
-    public function __construct(BrandResponder $responder, ListBrandsService $services)
+    public function __construct(GenericResponder $responder, ListBrandsService $services)
     {
         $this->responder = $responder;
         $this->services = $services;
@@ -17,6 +18,6 @@ class ListBrandsAction
     {
         return $this->responder->withResponse(
             $this->services->handle($request)
-        )->respond();
+        )->getResponseData();
     }
 }

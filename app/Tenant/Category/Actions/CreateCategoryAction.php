@@ -1,13 +1,14 @@
 <?php
 
 namespace App\Tenant\Category\Actions;
+use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Category\Domain\Requests\CategoryRequest;
 use App\Tenant\Category\Domain\Services\CreateCategoryService;
 use App\Tenant\Category\Responders\CategoryResponder;
 
 class CreateCategoryAction
 {
-    public function __construct(CategoryResponder $responder, CreateCategoryService $services)
+    public function __construct(GenericResponder $responder, CreateCategoryService $services)
     {
         $this->responder = $responder;
         $this->services = $services;
@@ -17,6 +18,6 @@ class CreateCategoryAction
     {
         return $this->responder->withResponse(
             $this->services->handle($request->validated())
-        )->respond();
+        )->getResponseData();
     }
 }

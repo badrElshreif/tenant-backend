@@ -17,20 +17,6 @@ class BrandResponder extends Responder
     public function respond()
     {
 
-            if (request()->is_paginated == 1) {
-
-                return $this->sendJson($this->getPaginatedResponse(
-                    $this->response->getData(),
-                    BrandLiteResource::collection($this->response->getData())
-                ));
-            }else{
-                return $this->sendJson($this->response->getData(), 200);
-            }
-            return $this->sendJson(
-                BrandLiteResource::collection($this->response->getData()),
-                $this->response->getStatus()
-            );
-
 //            return $this->sendJson($this->response->getData(), $this->response->getStatus());
 //
 //        if ($this->response->getStatus() == Response::HTTP_RESET_CONTENT)

@@ -1,13 +1,15 @@
 <?php
 
 namespace App\Tenant\Location\Actions;
+
+use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Location\Domain\Services\DeleteStateService;
 use App\Tenant\Location\Responders\StateResponder;
 use App\Tenant\Location\Domain\Models\State;
 
 class DeleteStateAction
 {
-    public function __construct(StateResponder $responder, DeleteStateService $services)
+    public function __construct(GenericResponder $responder, DeleteStateService $services)
     {
         $this->responder = $responder;
         $this->services = $services;
@@ -17,6 +19,6 @@ class DeleteStateAction
     {
         return $this->responder->withResponse(
             $this->services->handle(["state_id" => $id])
-        )->respond();
+        )->getResponseData();
     }
 }

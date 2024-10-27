@@ -1,13 +1,15 @@
 <?php
 
 namespace App\Tenant\Brand\Actions;
+
+use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Brand\Domain\Requests\BrandRequest;
 use App\Tenant\Brand\Domain\Services\UpdateBrandService;
 use App\Tenant\Brand\Responders\BrandResponder;
 
 class UpdateBrandAction
 {
-    public function __construct(BrandResponder $responder, UpdateBrandService $services)
+    public function __construct(GenericResponder $responder, UpdateBrandService $services)
     {
         $this->responder = $responder;
         $this->services = $services;
@@ -18,6 +20,6 @@ class UpdateBrandAction
 
         return $this->responder->withResponse(
             $this->services->handle(array_merge($request->validated(), ["brand_id" => $id]))
-        )->respond();
+        )->getResponseData();
     }
 }

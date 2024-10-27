@@ -4,8 +4,10 @@ namespace App\Tenant\Category\Domain\Services;
 
 use App\Infrastructure\Domain\Payloads\GenericPayload;
 use App\Infrastructure\Domain\Services\Service;
+use App\Infrastructure\Enums\ResponseType;
 use App\Tenant\Category\Domain\Models\Category;
 use App\Infrastructure\Exceptions\ModelNotFoundException;
+use App\Tenant\Category\Domain\Resources\CategoryResource;
 use Symfony\Component\HttpFoundation\Response;
 
 class UpdateCategoryService extends Service
@@ -28,19 +30,18 @@ class UpdateCategoryService extends Service
             //     }
             // }
             $category->update($data);
-            if(isset($data['tax_percentage'])){
-                foreach($category->products()->get() as $product){
+            if (isset($data['tax_percentage'])) {
+                foreach ($category->products()->get() as $product) {
                     $tax = $product->price * $category->tax_percentage / 100;
                     $product->update([
                         'price_including_tax' => $product->price + $tax
                     ]);
                 }
             }
-            return new GenericPayload($category, Response::HTTP_CREATED);
+            return new GenericPayload($category, Response::HTTP_OK,
+                ResponseType::SingleResource, CategoryResource::class);
 
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
-            throw new ModelNotFoundException;
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             return new GenericPayload(
                 __('error.someThingWrong'), 422
             );

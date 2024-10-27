@@ -1,13 +1,15 @@
 <?php
 
 namespace App\Tenant\Brand\Actions;
+
+use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Brand\Domain\Requests\BrandRequest;
 use App\Tenant\Brand\Domain\Services\CreateBrandService;
 use App\Tenant\Brand\Responders\BrandResponder;
 
 class CreateBrandAction
 {
-    public function __construct(BrandResponder $responder, CreateBrandService $services)
+    public function __construct(GenericResponder $responder, CreateBrandService $services)
     {
         $this->responder = $responder;
         $this->services = $services;
@@ -17,6 +19,6 @@ class CreateBrandAction
     {
         return $this->responder->withResponse(
             $this->services->handle($request->validated())
-        )->respond();
+        )->getResponseData();
     }
 }

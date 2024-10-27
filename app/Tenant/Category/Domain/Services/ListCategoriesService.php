@@ -47,7 +47,11 @@ class ListCategoriesService extends Service
                     //  return $collection->whereHas('childs');
                 })
                 ->orderBy($order, $order_type)->get();
-            return responseX(ResponseType::CollectionList, $categories);
+
+            return new GenericPayload($categories,
+                Response::HTTP_ACCEPTED,
+                ResponseType::CollectionList,
+                CategoryLiteResource::class);
         else:
             if (!isset($data['is_paginated'])):
                 $categories = $categories->active(1)
@@ -62,7 +66,10 @@ class ListCategoriesService extends Service
                     })
                     ->orderBy('order', 'ASC');
                 // return new GenericPayload($categories->get(), Response::HTTP_OK);
-                return responseX(ResponseType::CollectionList, $categories->get());
+                return new GenericPayload($categories->get(),
+                    Response::HTTP_ACCEPTED,
+                    ResponseType::CollectionList,
+                    CategoryLiteResource::class);
             else:
                 if ($is_paginated == 0 || $is_paginated == 'false') {
                     //dd($is_paginated);

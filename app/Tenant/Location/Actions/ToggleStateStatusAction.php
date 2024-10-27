@@ -1,12 +1,14 @@
 <?php
 
 namespace App\Tenant\Location\Actions;
+
+use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Location\Domain\Services\ToggleStateStatusService;
 use App\Tenant\Location\Responders\StateResponder;
 
 class ToggleStateStatusAction
 {
-    public function __construct(StateResponder $responder, ToggleStateStatusService $services)
+    public function __construct(GenericResponder $responder, ToggleStateStatusService $services)
     {
         $this->responder = $responder;
         $this->services = $services;
@@ -16,6 +18,6 @@ class ToggleStateStatusAction
     {
         return $this->responder->withResponse(
             $this->services->handle(["state_id" => $id])
-        )->respond();
+        )->getResponseData();
     }
 }
