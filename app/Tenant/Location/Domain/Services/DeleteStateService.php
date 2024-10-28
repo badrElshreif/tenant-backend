@@ -24,7 +24,7 @@ class DeleteStateService extends Service
 //                );
 
             $state->delete();
-            return new GenericPayload(['message' => __('success.deletedSuccessfuly')], Response::HTTP_NO_CONTENT);
+            return new GenericPayload(['message' => __('success.deletedSuccessfuly')], Response::HTTP_OK);
         } catch (\Exception $ex) {
             return new GenericPayload(
                 __('error.someThingWrong'), 422

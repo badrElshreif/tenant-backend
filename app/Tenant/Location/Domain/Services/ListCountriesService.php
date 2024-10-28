@@ -58,12 +58,12 @@ class ListCountriesService extends Service
         else:
             $countries = $this->country->whereNull('deleted_at')
                 ->when(!isset($data['all']) || $all == 0, function ($collection) use ($all) {
-                    return $collection->whereHas('states', function ($q) {
-                        $q->where('is_active', 1)
-                            ->whereHas('cities', function ($q) {
-                                $q->where('is_active', 1);
-                            });
-                    });
+//                    return $collection->whereHas('states', function ($q) {
+//                        $q->where('is_active', 1)
+//                            ->whereHas('cities', function ($q) {
+//                                $q->where('is_active', 1);
+//                            });
+//                    });
                 })
                 ->whereIsActive($active)->orderBy($order, $order_type)->get();
 

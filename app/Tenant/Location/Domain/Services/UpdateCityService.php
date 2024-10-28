@@ -4,9 +4,9 @@ namespace App\Tenant\Location\Domain\Services;
 
 use App\Infrastructure\Domain\Payloads\GenericPayload;
 use App\Infrastructure\Domain\Services\Service;
-use Illuminate\Support\Arr;
+use App\Infrastructure\Enums\ResponseType;
+use App\Tenant\Location\Domain\Resources\CityResource;
 use App\Tenant\Location\Domain\Models\City;
-use App\Infrastructure\Exceptions\ModelNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 
 class UpdateCityService extends Service
@@ -15,12 +15,12 @@ class UpdateCityService extends Service
     {
         try {
             $city = City::findOrFail($data['city_id']);
-        	$city->update($data);
-            return new GenericPayload($city, Response::HTTP_CREATED);
+            $city->update($data);
 
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
-            throw new ModelNotFoundException;
-        } catch (Exception $ex) {
+            return new GenericPayload($city, Response::HTTP_OK,
+                ResponseType::SingleResource, CityResource::class);
+
+        } catch (\Exception $ex) {
             return new GenericPayload(
                 __('error.someThingWrong'), 422
             );

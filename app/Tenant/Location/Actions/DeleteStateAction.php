@@ -4,8 +4,6 @@ namespace App\Tenant\Location\Actions;
 
 use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Location\Domain\Services\DeleteStateService;
-use App\Tenant\Location\Responders\StateResponder;
-use App\Tenant\Location\Domain\Models\State;
 
 class DeleteStateAction
 {

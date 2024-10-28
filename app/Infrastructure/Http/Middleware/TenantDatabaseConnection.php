@@ -5,8 +5,10 @@ namespace App\Infrastructure\Http\Middleware;
 use App\Main\Tenant\Domain\Models\Tenant;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\URL;
 
 class TenantDatabaseConnection
 {
@@ -14,9 +16,15 @@ class TenantDatabaseConnection
     public function handle($request, Closure $next)
     {
 
+
         if (!empty($request->tenant) || $request->headers->has('tenant')) {
             $tenant = $request->tenant ?? $request->header('tenant') ?? "";
             $tenant = Tenant::where('slug', $tenant)->firstOrFail();
+
+            if ($request->headers->has('tenant')) {
+                URL::forceRootUrl(($request->isSecure ? "https://" : "http://") . $tenant->slug . "." . $request->getHost());
+//                Config::set('app.url', $tenant->slug . "." . $request->getHost());
+            }
 
             //establish connection based on tenant (tenant_id)
             $database = "tenant_{$tenant->id}";

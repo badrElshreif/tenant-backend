@@ -38,8 +38,8 @@ class Brand extends Model
     public function getMinImgAttribute()
     {
         if (isset($this->image))
-            return route('tenant.image.resize',
-                [getTenant()->slug, 80, 80, 'uploads', $this->image]
+            return routeTenant('tenant.image.resize',
+                [80, 80, 'uploads', $this->image],
             );
         else
             return asset("assets/images/default/default-logo.png");
@@ -56,8 +56,8 @@ class Brand extends Model
     public function logo_url($w, $h)
     {
         if (isset($this->image)):
-            return route('tenant.image.resize',
-                [getTenant()->slug, $w, $h, 'uploads', $this->image]
+            return routeTenant('tenant.image.resize',
+                [$w, $h, 'uploads', $this->image],
             );
         else:
             return asset("assets/images/default/default-logo.png");
