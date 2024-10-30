@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Infrastructure\Domain\Filters;
+
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -33,7 +35,7 @@ abstract class QueryFilter
 //dd($this->fields());
         foreach ($this->fields() as $field => $value) {
             $method = Str::camel($field);
-           // dd($method);
+            // dd($method);
             if (method_exists($this, $method)) {
                 call_user_func_array([$this, $method], (array)$value);
             }
@@ -46,10 +48,13 @@ abstract class QueryFilter
     protected function fields(): array
     {
         return array_filter(
-            array_map('trim', $this->request->all())
-            // array_map(function ($value) {
-            //     return is_string($value) ? trim($value, " \n\r\t\v") : $value;
-            // }, $this->request->all())
+        // array_map('trim', $this->request->all())
+            array_map(function ($item) {
+                return $item ? trim($item) : $item;
+            }, $this->request->all())
+        // array_map(function ($value) {
+        //     return is_string($value) ? trim($value, " \n\r\t\v") : $value;
+        // }, $this->request->all())
         );
     }
 }

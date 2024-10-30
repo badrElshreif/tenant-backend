@@ -4,12 +4,12 @@ namespace App\Tenant\Product\Domain\Services;
 
 use App\Infrastructure\Domain\Payloads\GenericPayload;
 use App\Infrastructure\Domain\Services\Service;
-use App\Location\Domain\Models\City;
-use App\Location\Domain\Models\State;
+use App\Infrastructure\Enums\ResponseType;
+
 use App\Tenant\Product\Domain\Models\ProductView;
 use App\Tenant\Product\Domain\Models\Product;
 use App\Tenant\Product\Domain\Filters\ProductFilter;
-use App\Store\Domain\Models\Store;
+use App\Tenant\Product\Domain\Resources\ProductLiteResource;
 use DB;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Log;
@@ -34,9 +34,10 @@ class ListProductsService extends Service
 
             $data['type'] = $data['type'] ?? "stores";
 
-            if (auth()->guard('store')->check() || auth()->guard('center')->check()) {
-                $storesIDS = \Illuminate\Support\Facades\DB::table('stores')->where('seller_id', auth()->guard('store')->id() ?? auth()->guard('center')->id())->pluck('id');
-
+            if (auth('tenant-admin')->check()) {
+                $storesIDS = \Illuminate\Support\Facades\DB::table('stores')->pluck('id');
+            } else if (auth('tenant-store')->check()) {
+                $storesIDS = \Illuminate\Support\Facades\DB::table('stores')->where('seller_id', auth()->guard('tenant-store')->id() ?? auth()->guard('center')->id())->pluck('id');
             } else {
 
                 $storesIDS = \Illuminate\Support\Facades\DB::table('stores');
@@ -116,23 +117,29 @@ class ListProductsService extends Service
                     ->orderBy('distance', 'asc');
 
             } else {
-
                 $products = $this->product;
             }
 
 
-            $products = $products->whereRelation('category', 'type', $data['type'])
+            $products = $products
+//                ->whereRelation('category', 'type') // $data['type']
                 ->when($store_id, function ($collection) use ($store_id) {
                     return $collection->where('products_view.store_id', $store_id);
                 })
-                ->when(!auth('store')->check(), function ($collection) use ($store_id, $active) {
+                ->when(!auth('tenant-store')->check(), function ($collection) use ($store_id, $active) {
                     return $collection->where('products_view.approved', $active);
                 })
                 /*->when($category, function($collection) use ($category){
                 return $collection->where('products_view.category_id', $category);
-            })*/ ->when(!isset($store_id), function ($collection) use ($storesIDS) {
+            })*/
+                ->when(!isset($store_id), function ($collection) use ($storesIDS) {
+                    info("storesIDS", [$storesIDS]);
+                    if (empty($storesIDS)) {
+                        return $collection->whereNull('products_view.store_id');
+                    }
                     return $collection->whereIn('products_view.store_id', $storesIDS);
-                })->filter($this->filter)
+                })
+                ->filter($this->filter)
                 ->when($order == 'name', function ($collection) use ($order_type) {
                     return $collection->join('product_translations', function ($join) {
                         $join->on('products_view.id', '=', 'product_translations.product_id')
@@ -176,7 +183,8 @@ class ListProductsService extends Service
 
                 //Log::info($products);
 
-                return new GenericPayload($products, Response::HTTP_ACCEPTED);
+                return new GenericPayload($products, Response::HTTP_OK,
+                    ResponseType::CollectionWithPaginated, ProductLiteResource::class);
             else:
                 if (isset($data['has_pagination'])) {
                     $products = $products->where('products_view.is_active', $active)->get();
@@ -188,10 +196,10 @@ class ListProductsService extends Service
                     ->paginate($limit);
 
 
-                return new GenericPayload($products, Response::HTTP_ACCEPTED);
+                return new GenericPayload($products, Response::HTTP_OK,
+                    ResponseType::CollectionWithPaginated, ProductLiteResource::class);
             endif;
         } catch (\Exception $e) {
-            dd($e);
             info("list products", ['erre' => $e->getMessage(), 'line' => $e->getLine(), 'file' => $e->getFile()]);
         }
     }

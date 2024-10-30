@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -20,7 +19,7 @@ return new class extends Migration
             $table->boolean('approved')->default(false);
             $table->unsignedBigInteger('category_id')->index('products_category_id_foreign');
             $table->unsignedBigInteger('brand_id')->nullable()->index('products_brand_id_foreign');
-            $table->unsignedBigInteger('store_id')->index('products_store_id_foreign');
+            $table->unsignedBigInteger('store_id')->index('products_store_id_foreign')->nullable();
             $table->string('image')->nullable();
             $table->string('barcode')->nullable();
             $table->unsignedBigInteger('made_in')->nullable()->index('products_made_in_foreign');

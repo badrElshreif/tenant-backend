@@ -2,23 +2,35 @@
 
 namespace App\Tenant\Product\Domain\Models;
 
+use App\Tenant\Brand\Domain\Models\Brand;
+use App\Tenant\Category\Domain\Models\Category;
+use App\Tenant\Location\Domain\Models\Country;
+use App\Tenant\Offer\Domain\Models\Offer;
+use App\Tenant\Order\Domain\Models\OrderItem;
+use App\Tenant\Order\Domain\Models\OrderService;
+use App\Tenant\Property\Domain\Models\Property;
+use App\Tenant\Store\Domain\Models\Store;
+use App\Uploader\Domain\Models\Attachment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Astrotomic\Translatable\Translatable;
 use App\Infrastructure\Domain\Filters\Filterable;
+
 //use OwenIt\Auditing\Contracts\Auditable;
 
 //class Product extends Model implements Auditable
 class Product extends Model
 {
     use Translatable, HasFactory, Filterable;
+
     //use \OwenIt\Auditing\Auditable;
     public $translatedAttributes = ['name', 'description', 'tags'];
     protected $guarded = ['id'];
-    public static function factory(...$parameters)
-    {
 
-    }
+//    public static function factory(...$parameters)
+//    {
+//
+//    }
 
     protected $casts = [
         'is_active' => 'boolean'
@@ -29,12 +41,13 @@ class Product extends Model
      */
     public function attachments()
     {
-        return $this->morphMany('App\Uploader\Domain\Models\Attachment', 'attachable');
+        return $this->morphMany(Attachment::class, 'attachable');
     }
 
-    public function country() {
+    public function country()
+    {
         return $this->belongsTo(
-            'App\Location\Domain\Models\Country',
+            Country::class,
             'made_in'
         );
     }
@@ -44,10 +57,11 @@ class Product extends Model
         $image = explode("/", $value);
         $this->attributes['image'] = end($image);
     }
+
     protected function getImageAttribute($image)
     {
         if (isset($image)):
-            return \Storage::disk('public')->url('/products/'.$image);
+            return \Storage::disk('public')->url('/products/' . $image);
         else:
             return "";
         endif;
@@ -58,10 +72,11 @@ class Product extends Model
         $image = explode("/", $value);
         $this->attributes['catalog'] = end($image);
     }
+
     protected function getCatalogAttribute($image)
     {
         if (isset($image)):
-            return \Storage::disk('public')->url('/products/'.$image);
+            return \Storage::disk('public')->url('/products/' . $image);
         else:
             return "";
         endif;
@@ -77,27 +92,29 @@ class Product extends Model
     //     ];
     // }
 
-    protected function getPriceIncludingTaxAttribute(){
+    protected function getPriceIncludingTaxAttribute()
+    {
         return $this->price + ($this->price * setting('added_tax') / 100);
     }
 
-    protected function getDiscountAttribute(){
+    protected function getDiscountAttribute()
+    {
         $discount = 0.00;
         $free_product = null;
         $offer = $this->offer->first();
-        if ($offer){
-            if ($offer->type == 'percentage'){
+        if ($offer) {
+            if ($offer->type == 'percentage') {
                 $discount = $this->price_including_tax * $offer->value / 100;
-            }else if ($offer->type == 'value'){
+            } else if ($offer->type == 'value') {
                 $discount = $offer->value;
-            } else if ($offer->type == "free_product"){
+            } else if ($offer->type == "free_product") {
                 $free_product = $offer->free_product_id;
-            }else {
+            } else {
                 $discount = 0.00;
             }
         }
         //return $discount;
-        return array ('offer_id' => optional($offer)->id, 'offer_discount' => $discount, 'free_product' => $free_product);
+        return array('offer_id' => optional($offer)->id, 'offer_discount' => $discount, 'free_product' => $free_product);
 
     }
 
@@ -114,65 +131,66 @@ class Product extends Model
 
     public function orders()
     {
-        return $this->hasMany('App\Order\Domain\Models\OrderItem');
+        return $this->hasMany(OrderItem::class);
     }
 
     public function serviceOrders()
     {
-        return $this->hasMany('App\Order\Domain\Models\OrderService', 'service_id', 'id');
+        return $this->hasMany(OrderService::class, 'service_id', 'id');
     }
 
     public function category()
     {
-        return $this->belongsTo('App\Category\Domain\Models\Category');
+        return $this->belongsTo(Category::class);
     }
 
     public function brand()
     {
-        return $this->belongsTo('App\Brand\Domain\Models\Brand');
+        return $this->belongsTo(Brand::class);
     }
 
     public function store()
     {
-        return $this->belongsTo('App\Store\Domain\Models\Store');
+        return $this->belongsTo(Store::class);
     }
 
-    /**
-     * The certificates that belong to the student.
-     */
+
     public function properties()
     {
-        return $this->belongsToMany('App\Property\Domain\Models\Property')->withPivot('property_option_id', 'value')->withTimestamps();
+        return $this->belongsToMany(Property::class)
+            ->withPivot('property_option_id', 'value')->withTimestamps();
     }
 
 
-    protected function getIsActiveAttribute($value){
+    protected function getIsActiveAttribute($value)
+    {
         if (!isset($this->deactivation_start_date) && !isset($this->deactivation_end_date))
-            return (bool) $value;
-        if($value == 1 && $this->deactivation_start_date <= date('Y-m-d') && $this->deactivation_end_date >= date('Y-m-d'))
-            return (bool) !$value;
-        return (bool) $value;
+            return (bool)$value;
+        if ($value == 1 && $this->deactivation_start_date <= date('Y-m-d') && $this->deactivation_end_date >= date('Y-m-d'))
+            return (bool)!$value;
+        return (bool)$value;
     }
 
-    public function offers() {
-        return $this->belongsToMany('App\Offer\Domain\Models\Offer');
+    public function offers()
+    {
+        return $this->belongsToMany(Offer::class);
     }
 
     public function scopeActive($query, $is_active)
     {
-        if($is_active == 0){
-            return $query->where('is_active','<>', 1)
+        if ($is_active == 0) {
+            return $query->where('is_active', '<>', 1)
                 ->orWhere([
                     ['is_active', 1],
                     ['deactivation_start_date', '<=', date('Y-m-d')],
                     ['deactivation_end_date', '>=', date('Y-m-d')]
                 ]);
-        }else{
+        } else {
             return $query->where([
-                    ['is_active', 1],
-                    ['deactivation_start_date', null],
-                    ['deactivation_end_date', null]
-                ])
+                ['is_active', 1],
+                ['deactivation_start_date', null],
+                ['deactivation_end_date', null]
+            ])
                 ->orWhere([
                     ['is_active', 1],
                     ['deactivation_start_date', '>', date('Y-m-d')],
@@ -181,8 +199,9 @@ class Product extends Model
         }
     }
 
-    public function offer() {
-        return $this->belongsToMany('App\Offer\Domain\Models\Offer')
+    public function offer()
+    {
+        return $this->belongsToMany(Offer::class)
             ->where([
                 ['is_active', 1],
                 ['start_date', '<=', date('Y-m-d')],
@@ -192,7 +211,7 @@ class Product extends Model
 
     public function ratings()
     {
-        return $this->hasMany('App\Tenant\Product\Domain\Models\Rating');
+        return $this->hasMany(Rating::class);
     }
 
 

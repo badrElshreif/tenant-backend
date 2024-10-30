@@ -3,6 +3,7 @@
 namespace App\Tenant\Product\Domain\Requests;
 
 use App\Infrastructure\Http\Requests\API\CustomApiRequest;
+use App\Tenant\Category\Domain\Models\Category;
 use Illuminate\Validation\Rule;
 
 class ProductRequest extends CustomApiRequest
@@ -41,7 +42,7 @@ class ProductRequest extends CustomApiRequest
             }
             case 'POST':
             {
-                $category = \App\Category\Domain\Models\Category::find($this->category_id);
+                $category = Category::find($this->category_id);
                 return [
                     'en.name' => [
                         'required',
@@ -69,20 +70,20 @@ class ProductRequest extends CustomApiRequest
                         'numeric',
                         'exists:brands,id'
                     ],
-                    'made_in' => [
-                        Rule::requiredIf(function () use ($category) {
-                            return $category && $category->type == 'stores';
-                        }),
-                        'numeric',
-                        'exists:countries,id'
-                    ],
-                    'store_id' => [
-                        Rule::requiredIf(function () use ($category) {
-                            return !auth('store')->check() || auth('store')->user()->store == null;
-                        }),
-                        'numeric',
-                        'exists:stores,id'
-                    ],
+//                    'made_in' => [
+//                        Rule::requiredIf(function () use ($category) {
+//                            return $category && $category->type == 'stores';
+//                        }),
+//                        'numeric',
+//                        'exists:countries,id'
+//                    ],
+//                    'store_id' => [
+//                        Rule::requiredIf(function () use ($category) {
+//                            return !auth('tenant-store')->check() || auth('tenant-store')->user()->store == null;
+//                        }),
+//                        'numeric',
+//                        'exists:stores,id'
+//                    ],
                     'barcode' => [
                         // Rule::requiredIf(function () use ($category){
                         //     return $category && $category->type == 'stores';
@@ -113,7 +114,7 @@ class ProductRequest extends CustomApiRequest
                     'is_active' => ['nullable', 'boolean'],
                     'ar.tags' => ['nullable', 'array'],
                     'en.tags' => ['nullable', 'array'],
-                    'image' => ['required', 'url'],
+                    'image' => ['required'],
                     'catalog' => ['nullable', 'url'],
                     'attachments' => ['nullable', 'array'],
                     'attachments.*.name' => [

@@ -3,6 +3,7 @@
 namespace App\Tenant\Category\Domain\Models;
 
 use App\Tenant\Product\Domain\Models\Product;
+use App\Tenant\Property\Domain\Models\Property;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Astrotomic\Translatable\Translatable;
@@ -36,7 +37,7 @@ class Category extends Model
 
     public function properties()
     {
-        return $this->belongsToMany('App\Property\Domain\Models\Property')
+        return $this->belongsToMany(Property::class)
             ->where('is_active', 1);
     }
 

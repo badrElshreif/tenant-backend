@@ -2,7 +2,7 @@
 
 namespace App\Tenant\Store\Domain\Models;
 
-use App\Location\Domain\Models\Country;
+use App\Tenant\Location\Domain\Models\Country;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Astrotomic\Translatable\Translatable;

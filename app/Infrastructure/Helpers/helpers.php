@@ -2,6 +2,7 @@
 
 use App\Infrastructure\Domain\Payloads\GenericPayload;
 use Illuminate\Support\Str;
+use App\Tenant\AppContent\Domain\Models\Setting;
 
 if (!function_exists('getSubdomain')) {
     function getSubdomain(): ?string
@@ -63,4 +64,12 @@ if (!function_exists('responseView')) {
     {
         return (new \App\Infrastructure\Responders\ResponderX())->getViewResponse($viewPath, $data);
     }
+}
+
+function setting($key = null)
+{
+    if (is_null($key)) {
+        return (Setting::where('key', 'added_tax')->first())?->body;
+    }
+    return (Setting::where('key', $key)->first())?->body;
 }

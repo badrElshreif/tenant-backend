@@ -2,7 +2,9 @@
 
 namespace App\Tenant\Admin\Domain\Models;
 
+use App\Tenant\Order\Domain\Models\OrderStatus;
 use App\Tenant\Store\Domain\Models\Store;
+use App\Uploader\Domain\Models\Attachment;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -109,17 +111,17 @@ class Admin extends Authenticatable
 
     public function attachments()
     {
-        return $this->morphMany('App\Uploader\Domain\Models\Attachment', 'creatable');
+        return $this->morphMany(Attachment::class, 'creatable');
     }
 
     public function store()
     {
-        return $this->belongsTo('App\Store\Domain\Models\Store');
+        return $this->belongsTo(Store::class);
     }
 
     public function orderStatuses()
     {
-        return $this->morphMany('App\Order\Domain\Models\OrderStatus', 'statusable');
+        return $this->morphMany(OrderStatus::class, 'statusable');
     }
 
     public function tokens()

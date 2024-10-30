@@ -2,18 +2,18 @@
 
 namespace App\Tenant\Product\Domain\Resources;
 
+use App\Tenant\Offer\Domain\Resources\OfferLiteResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Tenant\Product\Domain\Models\ProductView;
-use App\Offer\Domain\Resources\OfferLiteResource;
 use App\Tenant\Product\Domain\Resources\ProductPropertyLiteResource;
-use App\Uploader\Domain\Resources\AttachmentResource;
 use App\Infrastructure\Domain\Resources\GenericNameResource;
+
 class ProductResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function toArray($request)
@@ -23,12 +23,12 @@ class ProductResource extends JsonResource
         $free_product = null;
         $offer = $this->offer->first();
 
-        if ($offer && $this->category->type == 'stores'){
-            if ($offer->type == "free_product"){
+        if ($offer && $this->category->type == 'stores') {
+            if ($offer->type == "free_product") {
                 $free_product = new GenericNameResource($offer->freeProduct);
-            }else if ($offer->type == 'percentage'){
+            } else if ($offer->type == 'percentage') {
                 $discount = $this->price_including_tax * $offer->value / 100;
-            }else{
+            } else {
                 $discount = $offer->value;
             }
         }
@@ -37,40 +37,40 @@ class ProductResource extends JsonResource
         $reviews = [];
         $review_statistics = [];
 
-        $similar_products =  ProductView::active(1)->whereCategoryId($this->category_id)->where('id', '!=', $this->id)->orderBy('id', 'desc')->limit(10)->get();
-            $reviews = RatingResource::collection($this->ratings()->where('is_active', 1)->get());
-            $review_statistics = [];
-            for ($i=5; $i > 0; $i--) {
-                $rate = array(
-                    'rate' => $i,
-                    'users_no' => $this->ratings->where('rate', '>', $i-1)->where('rate', '<=', $i)->where('is_active', 1)->count('user_id')
-                );
-                array_push($review_statistics, $rate);
-            }
+        $similar_products = ProductView::active(1)->whereCategoryId($this->category_id)->where('id', '!=', $this->id)->orderBy('id', 'desc')->limit(10)->get();
+        $reviews = RatingResource::collection($this->ratings()->where('is_active', 1)->get());
+        $review_statistics = [];
+        for ($i = 5; $i > 0; $i--) {
+            $rate = array(
+                'rate' => $i,
+                'users_no' => $this->ratings->where('rate', '>', $i - 1)->where('rate', '<=', $i)->where('is_active', 1)->count('user_id')
+            );
+            array_push($review_statistics, $rate);
+        }
 
         $is_favourite = false;
-        if(auth()->check()){
-            if(auth()->user()->favourites){
-                if(in_array($this->id, auth()->user()->favourites->pluck('id')->toArray()))
-                $is_favourite = true;
+        if (auth()->check()) {
+            if (auth()->user()->favourites) {
+                if (in_array($this->id, auth()->user()->favourites->pluck('id')->toArray()))
+                    $is_favourite = true;
             }
 
         }
 
         $is_rated = false;
-        if(auth()->check()){
-            if(auth()->user()->ratings){
-                if(auth()->user()->ratings->where('product_id', $this->id)->first())
+        if (auth()->check()) {
+            if (auth()->user()->ratings) {
+                if (auth()->user()->ratings->where('product_id', $this->id)->first())
                     $is_rated = true;
             }
         }
         $last_review = $this->ratings()->where('is_active', 1)->orderBy('id', 'desc')->first();
 
-         $attachments = $this->attachments;
-        if(\Request::route()->getName() == "products.show")
+        $attachments = $this->attachments;
+        if (\Request::route()->getName() == "products.show")
             $attachments = optional($this->product)->attachments;
 
-        $resource =  [
+        $resource = [
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
@@ -79,11 +79,11 @@ class ProductResource extends JsonResource
             // 'deactivation_start_date' => $this->deactivation_start_date,
             // 'deactivation_end_date' => $this->deactivation_end_date,
             'ar' => $this->translate('ar') ? $this->translate('ar')->only('name', 'description', 'tags') : null,
-            'en' => $this->translate('en') ? $this->translate('en')->only('name', 'description', 'tags') :null,
+            'en' => $this->translate('en') ? $this->translate('en')->only('name', 'description', 'tags') : null,
             'image' => $this->image,
             'catalog' => $this->catalog,
             //'attachments' => AttachmentResource::collection($this->attachments),
-            'attachments' => AttachmentResource::collection($attachments),
+            // 'attachments' => AttachmentResource::collection($attachments),
             'category' => new GenericNameResource($category),
             'store' => new GenericNameResource($this->store),
             'price' => $this->price,
@@ -98,10 +98,10 @@ class ProductResource extends JsonResource
             'last_review' => new RatingResource($last_review),
         ];
 
-        if($this->category->type == 'centers')
+        if ($this->category->type == 'centers')
             $resource['preview_fees'] = $this->preview_fees;
 
-        if($this->category->type == 'stores'){
+        if ($this->category->type == 'stores') {
             $resource = array_merge($resource, [
                 'offer' => new OfferLiteResource($this->offer->first()),
                 'subcategory' => new GenericNameResource($this->category),
@@ -109,7 +109,7 @@ class ProductResource extends JsonResource
                 'quantity' => intval($this->quantity),
                 'price_including_tax' => number_format((float)$this->price_including_tax, 2, '.', ''),
                 'price_after_discount' => number_format((float)($this->price_including_tax - $discount), 2, '.', ''),
-                'discount' => $discount > 0 ?number_format((float)($discount/$this->price_including_tax)*100, 2, '.', '') : 0.00,
+                'discount' => $discount > 0 ? number_format((float)($discount / $this->price_including_tax) * 100, 2, '.', '') : 0.00,
                 'free_product' => $free_product,
                 'barcode' => $this->barcode,
                 'max_purchase_quantity' => $this->max_purchase_quantity,

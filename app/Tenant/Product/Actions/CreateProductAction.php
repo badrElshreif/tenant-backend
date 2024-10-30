@@ -1,13 +1,19 @@
 <?php
 
 namespace App\Tenant\Product\Actions;
+
+use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Product\Domain\Requests\ProductRequest;
 use App\Tenant\Product\Domain\Services\CreateProductService;
 use App\Tenant\Product\Responders\ProductResponder;
 
 class CreateProductAction
 {
-    public function __construct(ProductResponder $responder, CreateProductService $service)
+
+    protected $service;
+    protected $responder;
+
+    public function __construct(GenericResponder $responder, CreateProductService $service)
     {
         $this->responder = $responder;
         $this->service = $service;
@@ -17,6 +23,6 @@ class CreateProductAction
     {
         return $this->responder->withResponse(
             $this->service->handle($request->validated())
-        )->respond();
+        )->getResponseData();
     }
 }

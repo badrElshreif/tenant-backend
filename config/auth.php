@@ -40,9 +40,19 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'api' => [
+            'driver' => 'passport',
+            'provider' => 'users',
+            'hash' => false,
+        ],
         'tenant-admin' => [
             'driver' => 'passport',
             'provider' => 'tenant_admins',
+            'hash' => false,
+        ],
+        'tenant-store' => [
+            'driver' => 'passport',
+            'provider' => 'tenant_stores',
             'hash' => false,
         ],
     ],
@@ -72,6 +82,10 @@ return [
         'tenant_admins' => [
             'driver' => 'eloquent',
             'model' => App\Tenant\Admin\Domain\Models\Admin::class,
+        ],
+        'tenant_stores' => [
+            'driver' => 'eloquent',
+            'model' => \App\Tenant\Store\Domain\Models\StoreAdmin::class,
         ],
 
         // 'users' => [
