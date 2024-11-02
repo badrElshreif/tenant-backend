@@ -214,6 +214,17 @@ class Product extends Model
         return $this->hasMany(Rating::class);
     }
 
+    public function imageUrl($w, $h)
+    {
+        if (isset($this->image)):
+            return routeTenant('tenant.image.resize',
+                [$w, $h, 'uploads/products', $this->image],
+            );
+        else:
+            return asset("assets/images/default/default-logo.png");
+        endif;
+    }
+
 
 }
 

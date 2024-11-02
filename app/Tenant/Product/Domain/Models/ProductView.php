@@ -44,20 +44,20 @@ class ProductView extends Model
         );
     }
 
-    protected function setImageAttribute($value)
-    {
-        $image = explode("/", $value);
-        $this->attributes['image'] = end($image);
-    }
+//    protected function setImageAttribute($value)
+//    {
+//        $image = explode("/", $value);
+//        $this->attributes['image'] = end($image);
+//    }
 
-    protected function getImageAttribute($image)
-    {
-        if (isset($image)):
-            return \Storage::disk('public')->url('/products/' . $image);
-        else:
-            return "";
-        endif;
-    }
+//    protected function getImageAttribute($image)
+//    {
+//        if (isset($image)):
+//            return \Storage::disk('public')->url('/products/' . $image);
+//        else:
+//            return "";
+//        endif;
+//    }
 
     protected function setCatalogAttribute($value)
     {
@@ -182,6 +182,17 @@ class ProductView extends Model
     public function ratings()
     {
         return $this->hasMany(Rating::class, 'product_id', 'id');
+    }
+
+    public function imageUrl($w, $h)
+    {
+        if (isset($this->image)):
+            return routeTenant('tenant.image.resize',
+                [$w, $h, 'products', $this->image],
+            );
+        else:
+            return asset("assets/images/default/default-logo.png");
+        endif;
     }
 
 

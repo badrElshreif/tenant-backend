@@ -5,14 +5,20 @@ namespace App\Tenant\Product\Domain\Services;
 use App\Infrastructure\Domain\Payloads\GenericPayload;
 use App\Infrastructure\Domain\Services\Service;
 use App\Infrastructure\Enums\ResponseType;
+use App\Infrastructure\Traits\UploaderHelper;
+use App\Tenant\Brand\Domain\Models\Brand;
 use App\Tenant\Category\Domain\Models\Category;
 use App\Tenant\Product\Domain\Models\Product;
 use App\Tenant\Product\Domain\Resources\ProductResource;
+use App\Tenant\Property\Domain\Models\Property;
+use App\Tenant\Property\Domain\Models\PropertyOption;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 
 class CreateProductService extends Service
 {
+    use UploaderHelper;
+
     public function handle($data = [])
     {
         try {
@@ -25,9 +31,9 @@ class CreateProductService extends Service
                 auth('tenant-store')->user()->store->id : $data['store_id'] ?? null;
 
             if (!isset($data['store_id']))
-              //  return new GenericPayload(__('error.requiredStore'), 422);
+                //  return new GenericPayload(__('error.requiredStore'), 422);
 
-            $data['approved'] = auth('tenant-admin')->check();
+                $data['approved'] = auth('tenant-admin')->check();
 
             $category = Category::findOrFail($data['category_id']);
             if (!$category->parent && $category->type == 'stores')
@@ -40,18 +46,20 @@ class CreateProductService extends Service
                 }
 
 
+            $data['image'] = $this->handleUploadImg($data['image'],'products');
+
             $product = Product::create($data);
+
+
             if (isset($data['attachments'])) {
                 //$product->attachments()->createMany($data['attachments']);
                 $attachments = [];
                 foreach ($data['attachments'] as $attachment) {
-                    array_push($attachments,
-                        array_merge($attachment,
-                            [
-                                'attachable_id' => $product->id,
-                                'attachable_type' => 'App\Tenant\Product\Domain\Models\Product'
-                            ])
-                    );
+                    $attachments[] = array_merge($attachment,
+                        [
+                            'attachable_id' => $product->id,
+                            'attachable_type' => Product::class,
+                        ]);
                 }
                 auth()->user()->attachments()->createMany($attachments);
             }
@@ -94,15 +102,15 @@ class CreateProductService extends Service
                 $prop = Property::whereId($property['property_id'])->firstOrFail();
                 $property['property_option_id'] = null;
                 if ($prop->propertyType->has_options == 1) {
-                    $option = \App\Property\Domain\Models\PropertyOption::findOrFail($property['value']);
+                    $option = PropertyOption::findOrFail($property['value']);
                     $property['property_option_id'] = $option->id;
                     $property['value'] = null;
                 }
-                array_push($properties_arr, [
+                $properties_arr[] = [
                     'property_id' => $property['property_id'],
                     'value' => $property['value'],
                     'property_option_id' => $property['property_option_id']
-                ]);
+                ];
             }
         }
         //dd($properties_arr);
