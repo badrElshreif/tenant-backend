@@ -51,10 +51,11 @@ class ListCountriesService extends Service
                 })
                 ->paginate($limit);
 
-            return new GenericPayload($countries, Response::HTTP_OK,
-                ResponseType::CollectionWithPaginated,
-                CountryLiteResource::class);
-        //return new GenericPayload($countries, Response::HTTP_ACCEPTED);
+            return [
+                'countries' => CountryLiteResource::listCollection($countries),
+                'status' => true,
+                'message' => 'Countries List',
+            ];
         else:
             $countries = $this->country->whereNull('deleted_at')
                 ->when(!isset($data['all']) || $all == 0, function ($collection) use ($all) {
@@ -76,6 +77,12 @@ class ListCountriesService extends Service
             // if(auth('admin')->check())
             //     $countries = $countries->orderBy($order, $order_type)->get();
             // else
+
+            return [
+                'data' => CountryLiteResource::collection($countries),
+                'status' => true,
+                'message' => 'Countries List'
+            ];
             return new GenericPayload($countries, Response::HTTP_OK,
                 ResponseType::CollectionList,
                 CountryLiteResource::class);
