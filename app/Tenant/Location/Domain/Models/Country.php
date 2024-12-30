@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Tenant\Location\Domain\Models;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -26,10 +27,11 @@ class Country extends Model
         $image = explode("/", $value);
         $this->attributes['flag'] = end($image);
     }
+
     protected function getFlagAttribute($image)
     {
         if (isset($image)):
-            return \Storage::disk('public')->url('/countries/'.$image);
+            return \Storage::disk('public')->url('/countries/' . $image);
         else:
             return "";
         endif;
@@ -37,9 +39,9 @@ class Country extends Model
 
     public function scopeActive($query, $is_active)
     {
-        if($is_active == 1){
+        if ($is_active == 1) {
             return $query->where('is_active', 1);
-        }else{
+        } else {
             return $query->where('is_active', 0);
         }
     }

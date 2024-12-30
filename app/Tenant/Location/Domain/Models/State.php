@@ -11,6 +11,7 @@ use App\Infrastructure\Domain\Filters\Filterable;
 class State extends Model
 {
     use Translatable, HasFactory, SoftDeletes, Filterable;
+
     public $translatedAttributes = ['name'];
     protected $fillable = ['country_id', 'is_active'];
     // protected $guarded = [
@@ -29,9 +30,9 @@ class State extends Model
 
     public function scopeActive($query, $is_active)
     {
-        if($is_active == 1){
+        if ($is_active == 1) {
             return $query->where('is_active', 1);
-        }else{
+        } else {
             return $query->where('is_active', 0);
         }
     }

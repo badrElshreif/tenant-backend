@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class StateTranslation extends Model
 {
     use HasFactory;
+
     public $timestamps = false;
     protected $guarded = ['id'];
 

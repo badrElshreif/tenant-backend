@@ -9,7 +9,7 @@ class CityRequest extends CustomApiRequest
 {
     public function rules()
     {
-        switch ($this->method()){
+        switch ($this->method()) {
             case 'GET':
                 return [
                     'state_id' => [
@@ -25,11 +25,11 @@ class CityRequest extends CustomApiRequest
                         'nullable',
                         Rule::in(['ASC', 'DESC', 'asc', 'desc']),
                     ],
-                    'is_paginated' => ['nullable','in:1,0,true,false'],
-                    'active' => ['nullable','in:1,0,true,false'],
-                    'is_detailed' => ['nullable','in:1,0,true,false'],
-                    'per_page'  => ['nullable', 'numeric', 'gte:1'],
-                    'states'  => ['nullable'],
+                    'is_paginated' => ['nullable', 'in:1,0,true,false'],
+                    'active' => ['nullable', 'in:1,0,true,false'],
+                    'is_detailed' => ['nullable', 'in:1,0,true,false'],
+                    'per_page' => ['nullable', 'numeric', 'gte:1'],
+                    'states' => ['nullable'],
                 ];
             case 'DELETE':
                 return [];
@@ -39,18 +39,18 @@ class CityRequest extends CustomApiRequest
                     'en.name' => [
                         'required',
                         'max:255',
-                         // Rule::unique('city_translations', 'name')
-                         //     ->where(function ($query) {
-                         //         $query->where('locale', 'en');
-                         //     })
+                        // Rule::unique('city_translations', 'name')
+                        //     ->where(function ($query) {
+                        //         $query->where('locale', 'en');
+                        //     })
                     ],
                     'ar.name' => [
                         'required',
                         'max:255',
-                         // Rule::unique('city_translations', 'name')
-                         //     ->where(function ($query) {
-                         //         $query->where('locale', 'ar');
-                         //     })
+                        // Rule::unique('city_translations', 'name')
+                        //     ->where(function ($query) {
+                        //         $query->where('locale', 'ar');
+                        //     })
                     ],
                     'state_id' => [
                         'required', 'numeric',
@@ -71,18 +71,18 @@ class CityRequest extends CustomApiRequest
                     'en.name' => [
                         'sometimes',
                         'max:255',
-                         // Rule::unique('city_translations', 'name')
-                         //     ->where(function ($query) {
-                         //         $query->where('locale', 'en')->where('city_id','!=',$this->id);
-                         //     })
+                        // Rule::unique('city_translations', 'name')
+                        //     ->where(function ($query) {
+                        //         $query->where('locale', 'en')->where('city_id','!=',$this->id);
+                        //     })
                     ],
                     'ar.name' => [
                         'sometimes',
                         'max:255',
-                         // Rule::unique('city_translations', 'name')
-                         //     ->where(function ($query) {
-                         //         $query->where('locale', 'ar')->where('city_id','!=',$this->id);
-                         //     })
+                        // Rule::unique('city_translations', 'name')
+                        //     ->where(function ($query) {
+                        //         $query->where('locale', 'ar')->where('city_id','!=',$this->id);
+                        //     })
                     ],
                     'is_active' => ['nullable', 'boolean'],
                     'state_id' => [

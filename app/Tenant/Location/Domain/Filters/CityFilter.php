@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Tenant\Location\Domain\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
@@ -7,7 +8,6 @@ use App\Infrastructure\Domain\Filters\QueryFilter;
 
 class CityFilter extends QueryFilter
 {
-
     public function status($status)
     {
         $this->builder->where('is_active', $status);
@@ -20,13 +20,13 @@ class CityFilter extends QueryFilter
 
     public function publicSearch($search)
     {
-        $this->builder->whereHas('translations', function($q) use ($search) {
-                $q->where('name', 'like', '%' . $search . '%');
-            })
-            ->orWhereHas('state', function($q) use ($search){
+        $this->builder->whereHas('translations', function ($q) use ($search) {
+            $q->where('name', 'like', '%' . $search . '%');
+        })
+            ->orWhereHas('state', function ($q) use ($search) {
                 $q->whereRelation('translations', 'name', 'like', '%' . $search . '%');
             })
-            ->orWhereHas('country', function($q) use ($search){
+            ->orWhereHas('country', function ($q) use ($search) {
                 $q->whereRelation('translations', 'name', 'like', '%' . $search . '%');
             })
             ->orWhere('state_id', $search)

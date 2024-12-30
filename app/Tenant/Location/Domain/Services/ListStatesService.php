@@ -56,7 +56,7 @@ class ListStatesService extends Service
                 })
                 ->paginate($limit);
             return [
-                'data' => StateLiteResource::listCollection($cities),
+                'data' => StateLiteResource::listCollection($states),
                 'status' => true,
                 'message' => 'States List',
             ];
@@ -76,7 +76,7 @@ class ListStatesService extends Service
                 ->get();
 
             return [
-                'data' => StateLiteResource::listCollection($cities),
+                'data' => StateLiteResource::listCollection($states),
                 'status' => true,
                 'message' => 'States List',
             ];
