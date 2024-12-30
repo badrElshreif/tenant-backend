@@ -18,6 +18,6 @@ class CreateCountryAction
     {
         return $this->responder->withResponse(
             $this->services->handle($request->validated())
-        )->getResponseData();
+        )->respond();
     }
 }

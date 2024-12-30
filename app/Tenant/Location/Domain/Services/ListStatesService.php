@@ -2,9 +2,7 @@
 
 namespace App\Tenant\Location\Domain\Services;
 
-use App\Infrastructure\Domain\Payloads\GenericPayload;
 use App\Infrastructure\Domain\Services\Service;
-use App\Infrastructure\Enums\ResponseType;
 use App\Tenant\Location\Domain\Models\State;
 use App\Tenant\Location\Domain\Filters\StateFilter;
 use App\Tenant\Location\Domain\Resources\StateLiteResource;
@@ -57,8 +55,11 @@ class ListStatesService extends Service
                     $q->where('is_active', 1);
                 })
                 ->paginate($limit);
-            return new GenericPayload($states, Response::HTTP_OK,
-                ResponseType::CollectionWithPaginated, StateLiteResource::class,);
+            return [
+                'data' => StateLiteResource::listCollection($cities),
+                'status' => true,
+                'message' => 'States List',
+            ];
         else:
             $states = $this->state->filter($this->filter)->active(1)
                 ->whereHas('country', function ($q) {
@@ -74,8 +75,11 @@ class ListStatesService extends Service
 //                })
                 ->get();
 
-            return new GenericPayload($states, Response::HTTP_OK,
-                ResponseType::CollectionList, StateLiteResource::class,);
+            return [
+                'data' => StateLiteResource::listCollection($cities),
+                'status' => true,
+                'message' => 'States List',
+            ];
         endif;
     }
 }

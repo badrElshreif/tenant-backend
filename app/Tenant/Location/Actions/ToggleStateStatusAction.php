@@ -4,7 +4,6 @@ namespace App\Tenant\Location\Actions;
 
 use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Location\Domain\Services\ToggleStateStatusService;
-use App\Tenant\Location\Responders\StateResponder;
 
 class ToggleStateStatusAction
 {
@@ -18,6 +17,6 @@ class ToggleStateStatusAction
     {
         return $this->responder->withResponse(
             $this->services->handle(["state_id" => $id])
-        )->getResponseData();
+        )->respond();
     }
 }

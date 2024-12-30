@@ -53,16 +53,23 @@ class ListCitiesService extends Service
                     $q->where('is_active', 1);
                 })
                 ->paginate($limit);
-            return new GenericPayload($cities, Response::HTTP_OK,
-                ResponseType::CollectionWithPaginated, CityLiteResource::class);
+
+            return [
+                'data' => CityLiteResource::listCollection($cities),
+                'status' => true,
+                'message' => 'Countries List',
+            ];
         else:
             // if(auth('admin')->check())
             //     $cities = $this->city->filter($this->filter)->orderBy($order, $order_type)->get();
             // else
             $cities = $this->city->filter($this->filter)->whereIsActive(1)->orderBy($order, $order_type)->get();
 
-            return new GenericPayload($cities, Response::HTTP_OK,
-                ResponseType::CollectionList, CityLiteResource::class);
+            return [
+                'data' => CityLiteResource::listCollection($cities),
+                'status' => true,
+                'message' => 'Countries List',
+            ];
         endif;
     }
 }

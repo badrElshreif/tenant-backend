@@ -4,7 +4,6 @@ namespace App\Tenant\Location\Actions;
 
 use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Location\Domain\Services\DeleteCityService;
-use App\Tenant\Location\Responders\CityResponder;
 
 class DeleteCityAction
 {
@@ -18,6 +17,6 @@ class DeleteCityAction
     {
         return $this->responder->withResponse(
             $this->services->handle(["city_id" => $id])
-        )->getResponseData();
+        )->respond();
     }
 }

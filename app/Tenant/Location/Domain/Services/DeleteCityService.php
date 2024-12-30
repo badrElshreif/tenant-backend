@@ -20,11 +20,18 @@ class DeleteCityService extends Service
                 );
 
             $city->delete();
-            return new GenericPayload(['message' => __('success.deletedSuccessfuly')], Response::HTTP_NO_CONTENT);
+
+            return [
+                'status' => true,
+                'message' => __('success.deletedSuccessfuly'),
+                'code' => Response::HTTP_NO_CONTENT,
+            ];
         } catch (\Exception $ex) {
-            return new GenericPayload(
-                __('error.someThingWrong'), 422
-            );
+            return [
+                'status' => false,
+                'message' => $ex->getMessage(),
+                'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+            ];
         }
     }
 }

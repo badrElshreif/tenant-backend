@@ -4,7 +4,6 @@ namespace App\Tenant\Location\Actions;
 
 use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Location\Domain\Services\ToggleCityStatusService;
-use App\Tenant\Location\Responders\CityResponder;
 
 class ToggleCityStatusAction
 {
@@ -18,6 +17,6 @@ class ToggleCityStatusAction
     {
         return $this->responder->withResponse(
             $this->services->handle(["city_id" => $id])
-        )->getResponseData();
+        )->respond();
     }
 }

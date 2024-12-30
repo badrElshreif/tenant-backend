@@ -2,13 +2,10 @@
 
 namespace App\Tenant\Location\Domain\Services;
 
-use App\Infrastructure\Domain\Payloads\GenericPayload;
 use App\Infrastructure\Domain\Services\Service;
-use App\Infrastructure\Enums\ResponseType;
 use App\Tenant\Location\Domain\Models\Country;
 use App\Tenant\Location\Domain\Filters\CountryFilter;
 use App\Tenant\Location\Domain\Resources\CountryLiteResource;
-use Symfony\Component\HttpFoundation\Response;
 
 class ListCountriesService extends Service
 {
@@ -52,7 +49,7 @@ class ListCountriesService extends Service
                 ->paginate($limit);
 
             return [
-                'countries' => CountryLiteResource::listCollection($countries),
+                'data' => CountryLiteResource::listCollection($countries),
                 'status' => true,
                 'message' => 'Countries List',
             ];
@@ -79,13 +76,10 @@ class ListCountriesService extends Service
             // else
 
             return [
-                'data' => CountryLiteResource::collection($countries),
+                'data' => CountryLiteResource::listCollection($countries),
                 'status' => true,
                 'message' => 'Countries List'
             ];
-            return new GenericPayload($countries, Response::HTTP_OK,
-                ResponseType::CollectionList,
-                CountryLiteResource::class);
         endif;
     }
 }

@@ -2,9 +2,7 @@
 
 namespace App\Tenant\Location\Domain\Services;
 
-use App\Infrastructure\Domain\Payloads\GenericPayload;
 use App\Infrastructure\Domain\Services\Service;
-use App\Infrastructure\Enums\ResponseType;
 use App\Tenant\Location\Domain\Models\Country;
 use App\Tenant\Location\Domain\Resources\CountryResource;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,9 +16,11 @@ class ToggleCountryStatusService extends Service
 
             if ($country->is_active) {
                 if (count($country->states()->where('is_active', 1)->get()) > 0)
-                    return new GenericPayload(
-                        __('error.cannotDeactivate'), 422
-                    );
+                    return [
+                        'status' => false,
+                        'message' => __('error.cannotDeactivate'),
+                        'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                    ];
 
 //                if (count($country->addresses()->get()) > 0)
 //                    return new GenericPayload(
@@ -45,17 +45,17 @@ class ToggleCountryStatusService extends Service
                 'is_active' => !$country->is_active
             ]);
 
-            return new GenericPayload($country,
-                Response::HTTP_OK,
-                ResponseType::SingleResource,
-                CountryResource::class,
-            );
-            //return new GenericPayload($country, Response::HTTP_CREATED);
-
+            return [
+                'status' => true,
+                'data' => new CountryResource($country),
+                'message' => __('success.updatedSuccessfuly'),
+            ];
         } catch (\Exception $e) {
-            return new GenericPayload(
-                __('error.someThingWrong'), 422
-            );
+            return [
+                'status' => false,
+                'message' => $e->getMessage(),
+                'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+            ];
         }
 
     }

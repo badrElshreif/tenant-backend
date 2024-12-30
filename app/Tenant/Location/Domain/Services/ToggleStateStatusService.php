@@ -18,16 +18,17 @@ class ToggleStateStatusService extends Service
 
             if ($state->is_active) {
                 if (count($state->cities()->where('is_active', 1)->get()) > 0)
-                    return new GenericPayload(
-                        __('error.cannotDeactivate'), 422
-                    );
+                    return [
+                        'status' => false,
+                        'message' => __('error.cannotDeactivate'),
+                        'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                    ];
 
 //                if (count($state->addresses()->get()) > 0)
 //                    return new GenericPayload(
 //                        __('error.cannotDeactivate'), 422
 //                    );
             }
-
 
             $state->cities()->update([
                 'is_active' => !$state->is_active
@@ -37,13 +38,18 @@ class ToggleStateStatusService extends Service
                 'is_active' => !$state->is_active
             ]);
 
-            return new GenericPayload($state, Response::HTTP_OK,
-                ResponseType::SingleResource, StateResource::class,);
+            return [
+                'status' => true,
+                'data' => new StateResource($state),
+                'message' => __('success.updatedSuccessfuly'),
+            ];
 
-        } catch (\Exception $ex) {
-            return new GenericPayload(
-                __('error.someThingWrong'), 422
-            );
+        } catch (\Exception $e) {
+            return [
+                'status' => false,
+                'message' => $e->getMessage(),
+                'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+            ];
         }
     }
 }

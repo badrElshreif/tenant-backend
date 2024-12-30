@@ -16,6 +16,6 @@ class DeleteCountryAction
     {
         return $this->responder->withResponse(
             $this->services->handle(["country_id" => $id])
-        )->getResponseData();
+        )->respond();
     }
 }

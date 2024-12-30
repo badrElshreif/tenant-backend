@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Tenant\Location\Actions;
+
 use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Location\Domain\Requests\StateRequest;
 use App\Tenant\Location\Domain\Services\CreateStateService;
-use App\Tenant\Location\Responders\StateResponder;
 
 class CreateStateAction
 {
@@ -18,6 +18,6 @@ class CreateStateAction
     {
         return $this->responder->withResponse(
             $this->services->handle($request->validated())
-        )->getResponseData();
+        )->respond();
     }
 }

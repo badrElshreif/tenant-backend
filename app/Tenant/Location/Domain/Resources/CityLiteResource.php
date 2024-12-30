@@ -2,11 +2,11 @@
 
 namespace App\Tenant\Location\Domain\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use App\Infrastructure\Collections\CustomJsonResource;
 use DB;
 use App\Tenant\Location\Domain\Resources\StateResource;
 
-class CityLiteResource extends JsonResource
+class CityLiteResource extends CustomJsonResource
 {
     /**
      * Transform the resource into an array.

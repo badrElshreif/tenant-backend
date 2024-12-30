@@ -14,9 +14,11 @@ class DeleteStateService extends Service
         try {
             $state = State::findOrFail($data['state_id']);
             if (count($state->cities()->where('is_active', 1)->get()) > 0)
-                return new GenericPayload(
-                    __('error.cannotDelete'), 422
-                );
+                return [
+                    'status' => false,
+                    'message' => __('error.cannotDelete'),
+                    'code' => Response::HTTP_NO_CONTENT,
+                ];
 
 //            if(count($state->addresses()->get()) > 0)
 //                return new GenericPayload(
@@ -24,11 +26,17 @@ class DeleteStateService extends Service
 //                );
 
             $state->delete();
-            return new GenericPayload(['message' => __('success.deletedSuccessfuly')], Response::HTTP_OK);
+            return [
+                'status' => true,
+                'message' => __('success.deletedSuccessfuly'),
+                'code' => Response::HTTP_NO_CONTENT,
+            ];
         } catch (\Exception $ex) {
-            return new GenericPayload(
-                __('error.someThingWrong'), 422
-            );
+            return [
+                'status' => false,
+                'message' => $ex->getMessage(),
+                'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+            ];
         }
     }
 }

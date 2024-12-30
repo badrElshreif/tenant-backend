@@ -3,8 +3,6 @@
 namespace App\Tenant\Location\Actions;
 use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Location\Domain\Services\ShowStateService;
-use App\Tenant\Location\Responders\StateResponder;
-use App\Tenant\Location\Domain\Models\State;
 
 class ShowStateAction
 {
@@ -18,6 +16,6 @@ class ShowStateAction
     {
         return $this->responder->withResponse(
             $this->services->handle(["state_id" => $id])
-        )->getResponseData();
+        )->respond();
     }
 }

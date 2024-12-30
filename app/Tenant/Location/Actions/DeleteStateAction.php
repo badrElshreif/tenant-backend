@@ -17,6 +17,6 @@ class DeleteStateAction
     {
         return $this->responder->withResponse(
             $this->services->handle(["state_id" => $id])
-        )->getResponseData();
+        )->respond();
     }
 }

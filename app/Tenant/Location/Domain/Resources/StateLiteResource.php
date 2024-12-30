@@ -2,9 +2,9 @@
 
 namespace App\Tenant\Location\Domain\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use App\Infrastructure\Collections\CustomJsonResource;
 use App\Tenant\Location\Domain\Resources\CountryLiteResource;
-class StateLiteResource extends JsonResource
+class StateLiteResource extends CustomJsonResource
 {
     /**
      * Transform the resource into an array.

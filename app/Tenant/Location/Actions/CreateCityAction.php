@@ -5,7 +5,6 @@ namespace App\Tenant\Location\Actions;
 use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Location\Domain\Requests\CityRequest;
 use App\Tenant\Location\Domain\Services\CreateCityService;
-use App\Tenant\Location\Responders\CityResponder;
 
 class CreateCityAction
 {
@@ -19,6 +18,6 @@ class CreateCityAction
     {
         return $this->responder->withResponse(
             $this->services->handle($request->validated())
-        )->getResponseData();
+        )->respond();
     }
 }

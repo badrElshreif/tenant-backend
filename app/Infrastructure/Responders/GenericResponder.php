@@ -15,7 +15,7 @@ class GenericResponder extends Responder implements ResponderInterface
             $data = collect($this->response)->except(['status', 'message', 'code']);
 
             if (request()->is_paginated == 1) {
-                $result = $data?? [];
+                $result = $data ?? [];
             } else {
                 $result = $data ?? [];
             }
@@ -23,7 +23,6 @@ class GenericResponder extends Responder implements ResponderInterface
             return response()->json([
                 'status' => $this->response->status ?? true,
                 'message' => $this->response->message ?? "success",
-                //'data' => $data,
                 'result' => $result,
             ], $this->response->code ?? Response::HTTP_OK);
         }

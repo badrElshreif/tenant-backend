@@ -2,12 +2,12 @@
 
 namespace App\Tenant\Location\Actions;
 
+use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Location\Domain\Services\ShowCountryService;
-use App\Tenant\Location\Responders\CountryResponder;
 
 class ShowCountryAction
 {
-    public function __construct(CountryResponder $responder, ShowCountryService $services)
+    public function __construct(GenericResponder $responder, ShowCountryService $services)
     {
         $this->responder = $responder;
         $this->services = $services;
@@ -17,6 +17,6 @@ class ShowCountryAction
     {
         return $this->responder->withResponse(
             $this->services->handle(["country_id" => $id])
-        )->getResponseData();
+        )->respond();
     }
 }
