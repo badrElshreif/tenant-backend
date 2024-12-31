@@ -32,7 +32,6 @@ class Handler extends ExceptionHandler
     {
 
         if ($exception instanceof ModelNotFoundException) {
-            dd("fff");
             if($request->acceptsJson()){
 
             }

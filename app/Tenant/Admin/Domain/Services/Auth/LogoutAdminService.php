@@ -2,14 +2,16 @@
 
 namespace App\Tenant\Admin\Domain\Services\Auth;
 
-use App\Infrastructure\Domain\Payloads\GenericPayload;
 use App\Infrastructure\Domain\Services\Service;
 
 class LogoutAdminService extends Service
 {
-    public function handle($data = [])
+    public function handle($data = []): array
     {
-        auth("admin")->logout();
-        return new GenericPayload(['message' => 'success']);
+        auth("tenant-admin")->user()->token()->revoke();
+        return [
+            'status' => true,
+            'message' => __('success.logout'),
+        ];
     }
 }
