@@ -23,13 +23,17 @@ if (!function_exists('getSubdomain')) {
 if (!function_exists('getDomain')) {
     function getDomain(): string
     {
-        $parsed = parse_url(url('/'));
-        $exploded = explode('.', $parsed["host"]);
-        if (count($exploded) > 2) {
-            return Str::replaceLast($exploded[0] . ".", "", url('/'));
-        } else {
-            return url('/');
+        $host = parse_url(url('/'), PHP_URL_HOST);
+        $parts = explode('.', $host);
+        if (count($parts) == 2 && $parts[1] == 'localhost') {
+            return 'localhost';
         }
+        if (count($parts) > 2) {
+            $domain = implode('.', array_slice($parts, -2));
+        } else {
+            $domain = $host;
+        }
+        return $domain;
     }
 }
 

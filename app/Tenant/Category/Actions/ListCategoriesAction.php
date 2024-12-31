@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Tenant\Category\Actions;
+
 use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Category\Domain\Requests\CategoryRequest;
 use App\Tenant\Category\Domain\Services\ListCategoriesService;
-use App\Tenant\Category\Responders\CategoryResponder;
 
 class ListCategoriesAction
 {
@@ -18,6 +18,6 @@ class ListCategoriesAction
     {
         return $this->responder->withResponse(
             $this->services->handle($request)
-        )->getResponseData();
+        )->respond();
     }
 }

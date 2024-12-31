@@ -2,13 +2,13 @@
 
 namespace App\Tenant\Category\Actions;
 
+use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Category\Domain\Services\ListSubCategoriesService;
-use App\Tenant\Category\Responders\CategoryResponder;
-use Illuminate\Http\Request;
 use App\Tenant\Category\Domain\Requests\CategoryRequest;
+
 class ListAllSubCategoriesAction
 {
-    public function __construct(CategoryResponder $responder, ListSubCategoriesService $services)
+    public function __construct(GenericResponder $responder, ListSubCategoriesService $services)
     {
         $this->responder = $responder;
         $this->services = $services;

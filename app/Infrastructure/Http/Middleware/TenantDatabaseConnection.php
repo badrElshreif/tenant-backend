@@ -16,9 +16,9 @@ class TenantDatabaseConnection
     public function handle($request, Closure $next)
     {
 
-
         if (!empty($request->tenant) || $request->headers->has('tenant')) {
             $tenant = $request->tenant ?? $request->header('tenant') ?? "";
+
             $tenant = Tenant::where('slug', $tenant)->firstOrFail();
 
             if ($request->headers->has('tenant')) {

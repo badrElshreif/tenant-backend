@@ -1,13 +1,13 @@
 <?php
 
 namespace App\Tenant\Category\Actions;
+
 use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Category\Domain\Services\ShowCategoryService;
-use App\Tenant\Category\Responders\CategoryResponder;
 
 class ShowCategoryAction
 {
-    public function __construct(CategoryResponder $responder, ShowCategoryService $services)
+    public function __construct(GenericResponder $responder, ShowCategoryService $services)
     {
         $this->responder = $responder;
         $this->services = $services;
@@ -17,6 +17,6 @@ class ShowCategoryAction
     {
         return $this->responder->withResponse(
             $this->services->handle(["category_id" => $id])
-        )->getResponseData();
+        )->respond();
     }
 }

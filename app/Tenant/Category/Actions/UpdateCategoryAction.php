@@ -5,7 +5,6 @@ namespace App\Tenant\Category\Actions;
 use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Category\Domain\Requests\CategoryRequest;
 use App\Tenant\Category\Domain\Services\UpdateCategoryService;
-use App\Tenant\Category\Responders\CategoryResponder;
 
 class UpdateCategoryAction
 {
@@ -19,6 +18,6 @@ class UpdateCategoryAction
     {
         return $this->responder->withResponse(
             $this->services->handle(array_merge($request->validated(), ["category_id" => $id]))
-        )->getResponseData();
+        )->respond();
     }
 }

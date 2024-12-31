@@ -1,13 +1,14 @@
 <?php
 
 namespace App\Tenant\Category\Actions;
+
+use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Category\Domain\Requests\CategoryRequest;
 use App\Tenant\Category\Domain\Services\ListAllCategoriesWithSubService;
-use App\Tenant\Category\Responders\CategoryResponder;
 
 class ListAllCategoriesWithSubAction
 {
-    public function __construct(CategoryResponder $responder, ListAllCategoriesWithSubService $services)
+    public function __construct(GenericResponder $responder, ListAllCategoriesWithSubService $services)
     {
         $this->responder = $responder;
         $this->services = $services;

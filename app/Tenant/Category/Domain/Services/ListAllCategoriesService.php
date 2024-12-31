@@ -2,10 +2,10 @@
 
 namespace App\Tenant\Category\Domain\Services;
 
-use App\Infrastructure\Domain\Payloads\GenericPayload;
 use App\Infrastructure\Domain\Services\Service;
 use App\Tenant\Category\Domain\Models\Category;
 use App\Tenant\Category\Domain\Filters\CategoryFilter;
+use App\Tenant\Category\Domain\Resources\CategoryLiteResource;
 use Symfony\Component\HttpFoundation\Response;
 
 class ListAllCategoriesService extends Service
@@ -25,7 +25,11 @@ class ListAllCategoriesService extends Service
                 $q->where('is_active', 1);
             })
             ->orderBy('order', 'ASC')->get();
-        return new GenericPayload($categories, Response::HTTP_OK);
+        return [
+            'data' => CategoryLiteResource::listCollection($categories),
+            'status' => true,
+            'message' => 'Categories List',
+        ];
     }
 
 }

@@ -12,10 +12,10 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__ . '/../routes/console.php',
         health: '/up',
         then: function () {
-            if (!empty(getSubdomain()) || request()->headers->has('tenant')) {
+            if (!empty(getSubdomain()) || request()->headers->has('tenant') || getDomain() != env('APP_DOMAIN')) {
                 //Tenants Routes
                 $route = Route::middleware(['tenant-db-connection']);
-                if (!request()->headers->has('tenant')) {
+                if (!request()->headers->has('tenant') && getDomain() == env('APP_DOMAIN')) {
                     $route->domain('{tenant}.' . env('APP_DOMAIN'));
                 }
 
@@ -39,6 +39,7 @@ return Application::configure(basePath: dirname(__DIR__))
                         ->group(__DIR__ . '/../routes/tenant/storage.php');
                 });
             } else {
+
                 Route::prefix('/')->group(base_path('routes/web.php'));
 
                 Route::prefix('api')

@@ -32,11 +32,16 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
 
-        if (!empty(getSubdomain())) {
+        if (getDomain() != env('APP_DOMAIN')) {
+            $tenant = Tenant::where('domain', request()->getHost())->firstOrFail();
+        } elseif (!empty(getSubdomain())) {
             $tenant = getSubdomain() ?? "";
             $tenant = Tenant::where('slug', $tenant)->firstOrFail();
+        }
 
 
+        if (!empty($tenant)) {
+            //dd($tenant);
             //establish connection based on tenant (tenant_id)
             $database = "tenant_{$tenant->id}";
 

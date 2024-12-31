@@ -2,11 +2,11 @@
 
 namespace App\Tenant\Category\Domain\Resources;
 
+use App\Infrastructure\Collections\CustomJsonResource;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Storage;
 use App\Infrastructure\Domain\Resources\GenericNameResource;
 
-class CategoryLiteResource extends JsonResource
+class CategoryLiteResource extends CustomJsonResource
 {
     /**
      * Transform the resource into an array.

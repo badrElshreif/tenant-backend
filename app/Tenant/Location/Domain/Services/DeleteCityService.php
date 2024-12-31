@@ -15,9 +15,11 @@ class DeleteCityService extends Service
             $city = City::findOrFail($data['city_id']);
 
             if (count($city->addresses()->get()) > 0)
-                return new GenericPayload(
-                    __('error.cannotDelete'), 422
-                );
+                return [
+                    'status' => false,
+                    'message' => __('error.cannotDelete'),
+                    'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                ];
 
             $city->delete();
 

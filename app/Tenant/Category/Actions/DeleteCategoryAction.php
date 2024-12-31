@@ -17,6 +17,6 @@ class DeleteCategoryAction
     {
         return $this->responder->withResponse(
             $this->services->handle(["category_id" => $id])
-        )->getResponseData();
+        )->respond();
     }
 }

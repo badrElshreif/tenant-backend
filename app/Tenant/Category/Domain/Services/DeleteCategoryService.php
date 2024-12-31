@@ -2,7 +2,6 @@
 
 namespace App\Tenant\Category\Domain\Services;
 
-use App\Infrastructure\Domain\Payloads\GenericPayload;
 use App\Infrastructure\Domain\Services\Service;
 use App\Tenant\Category\Domain\Models\Category;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,21 +14,30 @@ class DeleteCategoryService extends Service
         try {
             if ($category->parent_id != null || $category->type == 'centers') {
 //                if (count($category->products()->get()) > 0)
-//                    return new GenericPayload(
-//                        __('error.cannotDelete'), 422
-//                    );
+//                return [
+//                    'status' => false,
+//                    'message' => __('error.cannotDelete'),
+//                    'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+//                ];
             } else {
                 if (count($category->childs()->get()) > 0)
-                    return new GenericPayload(
-                        __('error.cannotDeleteHasSubCategories'), 422
-                    );
+                    return [
+                        'status' => false,
+                        'message' => __('error.cannotDeleteHasSubCategories'),
+                        'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                    ];
             }
             $category->delete();
-            return new GenericPayload(['message' => __('success.deletedSuccessfuly')], Response::HTTP_OK);
-        } catch (\Exception $ex) {
-            return new GenericPayload(
-                __('error.someThingWrong'), 422
-            );
+            return [
+                'status' => true,
+                'message' => __('success.deletedSuccessfuly'),
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status' => false,
+                'message' => $e->getMessage(),
+                'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+            ];
         }
     }
 
