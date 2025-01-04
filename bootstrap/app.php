@@ -58,6 +58,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'tenant-db-connection' => \App\Infrastructure\Http\Middleware\TenantDatabaseConnection::class,
             'tenant-expire-token' => \App\Infrastructure\Http\Middleware\TenantExpireToken::class,
+            'tenant-admin-type' => \App\Infrastructure\Http\Middleware\TenantAdminType::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -22,13 +22,15 @@ class ListAdminsService extends Service
     {
         //$store_id = null;
         // if(auth()->guard('store')->check() || auth()->guard('center')->check()){
-
+      //  dd(auth('tenant-store')->check());
         // $store = auth()->user();
-//        if (auth('tenant-store')->check()) {
-//            $admin = StoreAdmin::where('store_id', $store->id);
-//        }
+        if (auth()->user()->type == 'store') {
+            $admin = StoreAdmin::where('store_id', auth()->user()->store->id);
+        }else{
+            $admin = Admin::where('is_seller', 0);
+        }
 //            $admin = Admin::whereNull('store_id');
-        $admin = Admin::where('is_seller', 0);
+
 
         $order = $data['orderBy'] ?: 'id';
         $order_type = $data['orderType'] ?: 'ASC';

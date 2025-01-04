@@ -14,7 +14,7 @@ Route::group(["prefix" => "auth"], function () {
 });
 
 
-Route::middleware(['auth:tenant-admin'])->group(function () {
+Route::middleware(['auth:tenant-admin', 'tenant-admin-type:tenant-admin'])->group(function () {
     Route::post("/auth/logout", \App\Tenant\Admin\Actions\Auth\LogoutAdminAction::class);
 
     Route::group(["prefix" => "auth/profile"], function () {
