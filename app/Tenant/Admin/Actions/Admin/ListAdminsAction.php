@@ -1,13 +1,14 @@
 <?php
 
 namespace App\Tenant\Admin\Actions\Admin;
+
+use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Admin\Domain\Requests\AdminRequest;
 use App\Tenant\Admin\Domain\Services\Admin\ListAdminsService;
-use App\Tenant\Admin\Responders\AdminResponder;
 
 class ListAdminsAction
 {
-    public function __construct(AdminResponder $responder, ListAdminsService $service)
+    public function __construct(GenericResponder $responder, ListAdminsService $service)
     {
         $this->responder = $responder;
         $this->service = $service;

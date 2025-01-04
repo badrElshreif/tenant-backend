@@ -2,6 +2,7 @@
 
 namespace App\Tenant\Product\Domain\Resources;
 
+use App\Infrastructure\Collections\CustomJsonResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Tenant\Product\Domain\Resources\CategoryLiteResource;
 use App\Tenant\Product\Domain\Resources\BrandLiteResource;
@@ -10,7 +11,7 @@ use App\Tenant\Product\Domain\Resources\ProductPropertyResource;
 use App\Uploader\Domain\Resources\AttachmentResource;
 use App\Infrastructure\Domain\Resources\GenericNameResource;
 
-class ProductLiteResource extends JsonResource
+class ProductLiteResource extends CustomJsonResource
 {
     /**
      * Transform the resource into an array.

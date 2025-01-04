@@ -2,17 +2,12 @@
 
 namespace App\Tenant\Product\Domain\Services;
 
-use App\Infrastructure\Domain\Payloads\GenericPayload;
 use App\Infrastructure\Domain\Services\Service;
-use App\Infrastructure\Enums\ResponseType;
-
 use App\Tenant\Product\Domain\Models\ProductView;
-use App\Tenant\Product\Domain\Models\Product;
 use App\Tenant\Product\Domain\Filters\ProductFilter;
 use App\Tenant\Product\Domain\Resources\ProductLiteResource;
 use DB;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Support\Facades\Log;
 
 class ListProductsService extends Service
 {
@@ -181,26 +176,38 @@ class ListProductsService extends Service
                            })->distance,2); */
                 }
 
-                //Log::info($products);
-
-                return new GenericPayload($products, Response::HTTP_OK,
-                    ResponseType::CollectionWithPaginated, ProductLiteResource::class);
+                //info($products);
+                return [
+                    'data' => ProductLiteResource::listCollection($products),
+                    'status' => true,
+                    'message' => __('success.listedSuccessfully'),
+                ];
             else:
                 if (isset($data['has_pagination'])) {
                     $products = $products->where('products_view.is_active', $active)->get();
-                    return new GenericPayload($products, Response::HTTP_OK);
+                    return [
+                        'data' => ProductLiteResource::collection($products),
+                        'status' => true,
+                        'message' => __('success.listedSuccessfully'),
+                    ];
                 }
                 $products = $products->when(isset($data['active']), function ($collection) use ($active) {
                     return $collection->where('products_view.is_active', $active);
                 })
                     ->paginate($limit);
-
-
-                return new GenericPayload($products, Response::HTTP_OK,
-                    ResponseType::CollectionWithPaginated, ProductLiteResource::class);
+                return [
+                    'data' => ProductLiteResource::collection($products),
+                    'status' => true,
+                    'message' => __('success.listedSuccessfully'),
+                ];
             endif;
         } catch (\Exception $e) {
-            info("list products", ['erre' => $e->getMessage(), 'line' => $e->getLine(), 'file' => $e->getFile()]);
+            info("list products", ['error' => $e->getMessage(), 'line' => $e->getLine(), 'file' => $e->getFile()]);
+            return [
+                'status' => false,
+                'message' => $e->getMessage(),
+                'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+            ];
         }
     }
 }

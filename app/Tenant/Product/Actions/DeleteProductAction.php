@@ -4,7 +4,6 @@ namespace App\Tenant\Product\Actions;
 
 use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Product\Domain\Services\DeleteProductService;
-use App\Tenant\Product\Responders\ProductResponder;
 
 class DeleteProductAction
 {
@@ -18,6 +17,6 @@ class DeleteProductAction
     {
         return $this->responder->withResponse(
             $this->service->handle(["product_id" => $id])
-        )->getResponseData();
+        )->respond();
     }
 }

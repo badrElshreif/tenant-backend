@@ -4,7 +4,6 @@ namespace App\Tenant\Brand\Actions;
 use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Brand\Domain\Requests\BrandRequest;
 use App\Tenant\Brand\Domain\Services\ListBrandsService;
-use App\Tenant\Brand\Responders\BrandResponder;
 
 class ListBrandsAction
 {
@@ -18,6 +17,6 @@ class ListBrandsAction
     {
         return $this->responder->withResponse(
             $this->services->handle($request)
-        )->getResponseData();
+        )->respond();
     }
 }

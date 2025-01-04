@@ -5,7 +5,6 @@ namespace App\Tenant\Brand\Actions;
 use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Brand\Domain\Requests\BrandRequest;
 use App\Tenant\Brand\Domain\Services\UpdateBrandService;
-use App\Tenant\Brand\Responders\BrandResponder;
 
 class UpdateBrandAction
 {
@@ -20,6 +19,6 @@ class UpdateBrandAction
 
         return $this->responder->withResponse(
             $this->services->handle(array_merge($request->validated(), ["brand_id" => $id]))
-        )->getResponseData();
+        )->respond();
     }
 }

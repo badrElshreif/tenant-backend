@@ -4,7 +4,6 @@ namespace App\Tenant\Product\Actions;
 
 use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Product\Domain\Services\ShowProductService;
-use App\Tenant\Product\Responders\ProductResponder;
 
 class ShowProductAction
 {
@@ -18,6 +17,6 @@ class ShowProductAction
     {
         return $this->responder->withResponse(
             $this->service->handle(["product_id" => $id])
-        )->getResponseData();
+        )->respond();
     }
 }

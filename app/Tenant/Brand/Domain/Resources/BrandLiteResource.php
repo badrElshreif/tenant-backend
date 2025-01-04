@@ -2,10 +2,11 @@
 
 namespace App\Tenant\Brand\Domain\Resources;
 
+use App\Infrastructure\Collections\CustomJsonResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
 
-class BrandLiteResource extends JsonResource
+class BrandLiteResource extends CustomJsonResource
 {
     /**
      * Transform the resource into an array.

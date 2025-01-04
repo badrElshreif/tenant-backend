@@ -4,7 +4,6 @@ namespace App\Tenant\Brand\Actions;
 
 use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Brand\Domain\Services\ToggleBrandStatusService;
-use App\Tenant\Brand\Responders\BrandResponder;
 
 class ToggleBrandStatusAction
 {
@@ -18,6 +17,6 @@ class ToggleBrandStatusAction
     {
         return $this->responder->withResponse(
             $this->services->handle(["brand_id" => $id])
-        )->getResponseData();
+        )->respond();
     }
 }

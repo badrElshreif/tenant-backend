@@ -2,13 +2,12 @@
 
 namespace App\Tenant\Product\Domain\Services;
 
-use App\Infrastructure\Domain\Payloads\GenericPayload;
 use App\Infrastructure\Domain\Services\Service;
+use App\Tenant\Category\Domain\Models\Category;
 use App\Tenant\Product\Domain\Models\Product;
-use App\Category\Domain\Models\Category;
-use App\Infrastructure\Exceptions\ModelNotFoundException;
+use App\Tenant\Product\Domain\Resources\ProductResource;
+use App\Tenant\Property\Domain\Models\Property;
 use Illuminate\Support\Facades\DB;
-use App\Property\Domain\Models\Property;
 use Symfony\Component\HttpFoundation\Response;
 
 class UpdateProductService extends Service
@@ -16,15 +15,14 @@ class UpdateProductService extends Service
     public function handle($data = [])
     {
         try {
-            // Begin Transaction
             DB::beginTransaction();
             $product = Product::findOrFail($data['product_id']);
-            if(isset($data['category_id'])){
+            if (isset($data['category_id'])) {
                 $category = Category::findOrFail($data['category_id']);
-            }else{
+            } else {
                 $category = $product->category;
             }
-                $data['approved']=auth('admin')->check();
+            $data['approved'] = auth('admin')->check();
 
             // if(isset($data['is_active']) && $data['is_active'] == 0){
             // 	if(count($product->orders()->get()) > 0)
@@ -34,44 +32,39 @@ class UpdateProductService extends Service
             // }
             $product->update($data);
 
-            if(isset($data['attachments']))
+            if (isset($data['attachments']))
                 $this->updateAttachments($product, $data['attachments']);
 
-            if(isset($data['properties']) && $category->type == 'stores')
+            if (isset($data['properties']) && $category->type == 'stores')
                 $this->saveProperties($product, $data['properties']);
-        // Commit Transaction
+            
             DB::commit();
-            return new GenericPayload($product, Response::HTTP_CREATED);
-
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
-            // Rollback Transaction
+            return [
+                'status' => true,
+                'data' => new ProductResource($product),
+                'message' => __('success.updatedSuccessfully'),
+            ];
+        } catch (\Exception $e) {
             DB::rollback();
-            throw new ModelNotFoundException;
-        } catch (\PDOException $ex){
-            // Rollback Transaction
-            DB::rollback();
-            return new GenericPayload(
-                __('error.someThingWrong'), 422
-            );
-        }catch (Exception $ex) {
-            // Rollback Transaction
-            DB::rollback();
-            return new GenericPayload(
-                __('error.someThingWrong'), 422
-            );
+            return [
+                'status' => false,
+                'message' => $e->getMessage(),
+                'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+            ];
         }
     }
 
-    private function updateAttachments($product, $attachments=[]){
+    private function updateAttachments($product, $attachments = [])
+    {
         $attachment_ids = array_column($attachments, 'id');
-        foreach($product->attachments as $attachment){
-            if(! in_array($attachment->id, $attachment_ids))
+        foreach ($product->attachments as $attachment) {
+            if (!in_array($attachment->id, $attachment_ids))
                 $attachment->delete();
         }
-        foreach($attachments as $attachment){
+        foreach ($attachments as $attachment) {
             $product->attachments()->updateOrCreate(
                 [
-                    'id' => $attachment['id']?? null
+                    'id' => $attachment['id'] ?? null
                 ],
                 $attachment
             );
@@ -80,17 +73,18 @@ class UpdateProductService extends Service
         return null;
     }
 
-    private function saveProperties($product, $properties){
+    private function saveProperties($product, $properties)
+    {
         $product->properties()->detach();
         $properties_arr = [];
         foreach ($properties as $property) {
-            if(isset($property['value']) && $property['value'] != ''){
+            if (isset($property['value']) && $property['value'] != '') {
                 //dd($property['property_id']);
                 //$prop = Property::where('id', $property['property_id'])->firstOrFail();
                 $prop = Property::findOrFail($property['property_id']);
                 //dd($prop);
                 $property['property_option_id'] = null;
-                if($prop->propertyType->has_options == 1){
+                if ($prop->propertyType->has_options == 1) {
                     $option = \App\Property\Domain\Models\PropertyOption::findOrFail($property['value']);
                     $property['property_option_id'] = $option->id;
                     $property['value'] = null;

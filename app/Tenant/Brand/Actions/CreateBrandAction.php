@@ -5,7 +5,6 @@ namespace App\Tenant\Brand\Actions;
 use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Brand\Domain\Requests\BrandRequest;
 use App\Tenant\Brand\Domain\Services\CreateBrandService;
-use App\Tenant\Brand\Responders\BrandResponder;
 
 class CreateBrandAction
 {
@@ -19,6 +18,6 @@ class CreateBrandAction
     {
         return $this->responder->withResponse(
             $this->services->handle($request->validated())
-        )->getResponseData();
+        )->respond();
     }
 }

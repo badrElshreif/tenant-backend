@@ -5,7 +5,6 @@ namespace App\Tenant\Product\Actions;
 use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Product\Domain\Requests\ProductRequest;
 use App\Tenant\Product\Domain\Services\CreateProductService;
-use App\Tenant\Product\Responders\ProductResponder;
 
 class CreateProductAction
 {
@@ -23,6 +22,6 @@ class CreateProductAction
     {
         return $this->responder->withResponse(
             $this->service->handle($request->validated())
-        )->getResponseData();
+        )->respond();
     }
 }

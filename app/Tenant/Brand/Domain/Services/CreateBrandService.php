@@ -2,10 +2,9 @@
 
 namespace App\Tenant\Brand\Domain\Services;
 
-use App\Infrastructure\Domain\Payloads\GenericPayload;
 use App\Infrastructure\Domain\Services\Service;
 use App\Tenant\Brand\Domain\Models\Brand;
-use Symfony\Component\HttpFoundation\Response;
+use App\Tenant\Brand\Responders\BrandResponder;
 
 class CreateBrandService extends Service
 {
@@ -14,7 +13,10 @@ class CreateBrandService extends Service
         $data['is_active'] = isset($data['is_active']) ? $data['is_active'] : 1;
         $data['image'] = (new Brand)->handleUploadImg($data['image']);
         $brand = Brand::create($data);
-        return new GenericPayload($brand, Response::HTTP_OK);
-
+        return [
+            'status' => true,
+            'message' => 'Brand created successfully',
+            'data' => new BrandResponder($brand),
+        ];
     }
 }

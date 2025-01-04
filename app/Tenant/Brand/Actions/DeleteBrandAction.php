@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Tenant\Brand\Actions;
+
 use App\Infrastructure\Responders\GenericResponder;
 use App\Tenant\Brand\Domain\Services\DeleteBrandService;
-use App\Tenant\Brand\Responders\BrandResponder;
 
 class DeleteBrandAction
 {
@@ -17,6 +17,6 @@ class DeleteBrandAction
     {
         return $this->responder->withResponse(
             $this->services->handle(["brand_id" => $id])
-        )->getResponseData();
+        )->respond();
     }
 }

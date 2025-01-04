@@ -46,7 +46,7 @@ class CreateProductService extends Service
                 }
 
 
-            $data['image'] = $this->handleUploadImg($data['image'],'products');
+            $data['image'] = $this->handleUploadImg($data['image'], 'products');
 
             $product = Product::create($data);
 
@@ -69,27 +69,19 @@ class CreateProductService extends Service
 
             // Commit Transaction
             DB::commit();
-            return new GenericPayload($product, Response::HTTP_OK,
-                ResponseType::SingleResource, ProductResource::class);
+            return [
+                'data' => new ProductResource($product),
+                'status' => true,
+                'message' => __('success.createdSuccessfully'),
+            ];
 
-        } catch (\Illuminate\Database\QueryException $ex) {
-            // Rollback Transaction
+        } catch (\Exception $e) {
             DB::rollback();
-            return new GenericPayload(
-                $ex->getMessage(), 422
-            );
-        } catch (\PDOException $ex) {
-            // Rollback Transaction
-            DB::rollback();
-            return new GenericPayload(
-                $ex->getMessage(), 422
-            );
-        } catch (\Exception $ex) {
-            // Rollback Transaction
-            DB::rollback();
-            return new GenericPayload(
-                $ex->getMessage() . "- Line " . $ex->getFile() . ":" . $ex->getLine(), 422
-            );
+            return [
+                'status' => false,
+                'message' => $e->getMessage(),
+                'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+            ];
         }
 
     }

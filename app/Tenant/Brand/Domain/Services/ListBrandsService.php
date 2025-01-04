@@ -43,8 +43,10 @@ class ListBrandsService extends Service
             }
             $brands = $brands->orderBy($order, $order_type)->get();
 
-            return new GenericPayload($brands, Response::HTTP_OK
-                , ResponseType::CollectionList, BrandLiteResource::class);
+            return [
+                'status' => true,
+                'data' => BrandLiteResource::collection($brands),
+            ];
 
         else:
             $brands = $brands
@@ -73,8 +75,10 @@ class ListBrandsService extends Service
                 });
             $brands = $brands->paginate($limit);
 
-            return new GenericPayload($brands, Response::HTTP_OK
-                , ResponseType::CollectionWithPaginated, BrandLiteResource::class);
+            return [
+                'status' => true,
+                'data' => BrandLiteResource::listCollection($brands),
+            ];
         endif;
     }
 

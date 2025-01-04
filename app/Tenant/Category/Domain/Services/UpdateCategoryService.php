@@ -38,13 +38,18 @@ class UpdateCategoryService extends Service
                     ]);
                 }
             }
-            return new GenericPayload($category, Response::HTTP_OK,
-                ResponseType::SingleResource, CategoryResource::class);
+            return [
+                'data' => new CategoryResource($category),
+                'status' => true,
+                'message' => __('success.updatedSuccessfully'),
+            ];
 
-        } catch (\Exception $ex) {
-            return new GenericPayload(
-                __('error.someThingWrong'), 422
-            );
+        } catch (\Exception $e) {
+            return [
+                'status' => false,
+                'message' => $e->getMessage(),
+                'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+            ];
         }
 
 

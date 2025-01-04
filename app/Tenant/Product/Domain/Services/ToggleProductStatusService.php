@@ -5,7 +5,6 @@ namespace App\Tenant\Product\Domain\Services;
 use App\Infrastructure\Domain\Payloads\GenericPayload;
 use App\Infrastructure\Domain\Services\Service;
 use App\Tenant\Product\Domain\Models\Product;
-use App\Infrastructure\Exceptions\ModelNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 use DB;
 
@@ -15,15 +14,15 @@ class ToggleProductStatusService extends Service
     {
         try {
             $product = Product::findOrFail($data['product_id']);
-            if($product->is_active == 1){
-                if($product->category->type == 'stores' && count($product->orders()->get()) > 0)
+            if ($product->is_active == 1) {
+                if ($product->category->type == 'stores' && count($product->orders()->get()) > 0)
                     return new GenericPayload(
-                         __('error.cannotDeactivate'), 422
+                        __('error.cannotDeactivate'), 422
                     );
 
-                if($product->category->type == 'centers' && count($product->serviceOrders()->get()) > 0)
+                if ($product->category->type == 'centers' && count($product->serviceOrders()->get()) > 0)
                     return new GenericPayload(
-                         __('error.cannotDeactivate'), 422
+                        __('error.cannotDeactivate'), 422
                     );
 
                 // if(isset($data['deactivation_start_date']) && isset($data['deactivation_end_date'])){
@@ -50,13 +49,17 @@ class ToggleProductStatusService extends Service
                 'deactivation_start_date' => null,
                 'deactivation_end_date' => null,
             ]);
-            return new GenericPayload($product, Response::HTTP_CREATED);
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
-            throw new ModelNotFoundException;
-        } catch (Exception $ex) {
-            return new GenericPayload(
-                ['message' => __('error.someThingWrong')], 422
-            );
+            return [
+                'status' => true,
+                'data' => $product,
+                'message' => __('success.updatedSuccessfully'),
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status' => false,
+                'message' => $e->getMessage(),
+                'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+            ];
         }
 
 
