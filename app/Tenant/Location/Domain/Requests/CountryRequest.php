@@ -23,7 +23,7 @@ class CountryRequest extends CustomApiRequest
                         Rule::in(['ASC', 'DESC', 'asc', 'desc']),
                     ],
                     'is_paginated' => ['sometimes', 'nullable','in:1,0,true,false'],
-                    'active' => ['sometimes', 'nullable','in:1,0,true,false'],
+                    'active' => ['sometimes', 'nullable','integer','in:1,0'], //true,false
                     'is_detailed' => ['sometimes', 'nullable','in:1,0,true,false'],
                     'all' => ['nullable','in:1,0,true,false'],
                     'per_page'  => ['sometimes', 'nullable', 'numeric', 'gte:1']

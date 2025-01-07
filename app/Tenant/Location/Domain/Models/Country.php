@@ -37,14 +37,14 @@ class Country extends Model
         endif;
     }
 
-    public function scopeActive($query, $is_active)
-    {
-        if ($is_active == 1) {
-            return $query->where('is_active', 1);
-        } else {
-            return $query->where('is_active', 0);
-        }
-    }
+//    public function scopeActive($query, $is_active)
+//    {
+//        if ($is_active == 1) {
+//            return $query->where('is_active', 1);
+//        } else {
+//            return $query->where('is_active', 0);
+//        }
+//    }
 
     public function states()
     {

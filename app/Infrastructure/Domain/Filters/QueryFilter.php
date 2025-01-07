@@ -32,7 +32,6 @@ abstract class QueryFilter
     public function apply(Builder $builder)
     {
         $this->builder = $builder;
-//dd($this->fields());
         foreach ($this->fields() as $field => $value) {
             $method = Str::camel($field);
             // dd($method);
@@ -47,14 +46,14 @@ abstract class QueryFilter
      */
     protected function fields(): array
     {
-        return array_filter(
-        // array_map('trim', $this->request->all())
+        // array_filter(
+        return
             array_map(function ($item) {
-                return $item ? trim($item) : $item;
-            }, $this->request->all())
+                return !is_numeric($item) ? trim($item, " \n\r\t\v") : $item;
+            }, $this->request->all());
         // array_map(function ($value) {
         //     return is_string($value) ? trim($value, " \n\r\t\v") : $value;
         // }, $this->request->all())
-        );
+
     }
 }

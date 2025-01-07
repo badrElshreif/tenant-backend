@@ -8,8 +8,11 @@ use App\Infrastructure\Domain\Filters\QueryFilter;
 
 class CountryFilter extends QueryFilter
 {
-    public function status($status)
+    public function active($status)
     {
+        if (!is_numeric($status)) {
+            $status = $status == 'true' ? 1 : 0;
+        }
         $this->builder->where('is_active', $status);
     }
 
