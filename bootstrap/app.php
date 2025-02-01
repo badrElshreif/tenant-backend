@@ -14,7 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         then: function () {
             if (!empty(getSubdomain()) || request()->headers->has('tenant') || getDomain() != env('APP_DOMAIN')) {
                 //Tenants Routes
-                $route = Route::middleware(['tenant-db-connection','tenant-expire-token']);
+                $route = Route::middleware(['set-locale','tenant-db-connection', 'tenant-expire-token']);
                 if (!request()->headers->has('tenant') && getDomain() == env('APP_DOMAIN')) {
                     $route->domain('{tenant}.' . env('APP_DOMAIN'));
                 }
@@ -59,6 +59,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'tenant-db-connection' => \App\Infrastructure\Http\Middleware\TenantDatabaseConnection::class,
             'tenant-expire-token' => \App\Infrastructure\Http\Middleware\TenantExpireToken::class,
             'tenant-admin-type' => \App\Infrastructure\Http\Middleware\TenantAdminType::class,
+            'set-locale' => \App\Infrastructure\Http\Middleware\SetLocale::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -17,23 +17,37 @@ class CountryRepository
         $this->filter = $filter;
     }
 
-    public function query($data, $order = 'order', $order_type = 'ASC')
+    public function query($request)
     {
-        $this->country = $this->country->whereNull('deleted_at')
-//            ->orderBy($order, $order_type)
-            ->filter($this->filter)
+        $order = $request['order_by'] ?? 'order';
+        $order_type = $request['order_type'] ?? 'ASC';
+
+        $this->country = $this->country
+           // ->filter($this->filter)
             ->when($order == 'name', function ($collection) use ($order_type) {
                 return $collection->join('country_translations', function ($join) {
                     $join->on('countries.id', '=', 'country_translations.country_id')
                         ->where('country_translations.locale', '=', app()->getLocale());
                 })
-                    ->groupBy('countries.id')
+                    //  ->groupBy('countries.id')
                     ->orderBy('country_translations.name', $order_type)
                     ->select('countries.*', 'country_translations.id as country_translation_id');
             })->when($order != 'name', function ($collection) use ($order, $order_type) {
                 return $collection->orderBy($order, $order_type);
             });
 
+        return $this;
+    }
+
+    public function withTrashed()
+    {
+        $this->country = $this->country->withTrashed();
+        return $this;
+    }
+
+    public function onlyTrashed()
+    {
+        $this->country = $this->country->onlyTrashed();
         return $this;
     }
 

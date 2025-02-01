@@ -17,14 +17,10 @@ class ListCountriesService extends Service
 
     public function handle($data = [])
     {
-        $order = $data['orderBy'] ?? 'order';
-        $order_type = $data['orderType'] ?? 'ASC';
-        $limit = $data['per_page'] ?? 10;
-
 
         if (isset($data['is_paginated']) && $data['is_paginated'] == 1):
-            $countries = $this->countryRepository->query($data, $order, $order_type)
-                ->paginate($limit);
+            $limit = $data['per_page'] ?? 10;
+            $countries = $this->countryRepository->query($data)->paginate($limit);
             return [
                 'data' => CountryLiteResource::listCollection($countries),
                 'status' => true,
@@ -32,7 +28,7 @@ class ListCountriesService extends Service
             ];
         endif;
 
-        $countries = $this->countryRepository->query($data, $order, $order_type)->get();
+        $countries = $this->countryRepository->query($data)->get();
         return [
             'data' => CountryLiteResource::collection($countries),
             'status' => true,

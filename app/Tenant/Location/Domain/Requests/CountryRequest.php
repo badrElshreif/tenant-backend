@@ -9,47 +9,47 @@ class CountryRequest extends CustomApiRequest
 {
     public function rules()
     {
-        switch ($this->method()){
+        switch ($this->method()) {
             case 'GET':
                 return [
-                    'orderBy' => [
+                    'order_by' => [
                         'sometimes',
                         'nullable',
                         Rule::in(['id', 'name', 'created_at', 'is_active', 'order']),
                     ],
-                    'orderType' => [
+                    'order_type' => [
                         'sometimes',
                         'nullable',
                         Rule::in(['ASC', 'DESC', 'asc', 'desc']),
                     ],
-                    'is_paginated' => ['sometimes', 'nullable','in:1,0,true,false'],
-                    'active' => ['sometimes', 'nullable','integer','in:1,0'], //true,false
-                    'is_detailed' => ['sometimes', 'nullable','in:1,0,true,false'],
-                    'all' => ['nullable','in:1,0,true,false'],
-                    'per_page'  => ['sometimes', 'nullable', 'numeric', 'gte:1']
+                    'is_paginated' => ['sometimes', 'nullable', 'in:1,0,true,false'],
+                    'active' => ['sometimes', 'nullable', 'integer', 'in:1,0'], //true,false
+                    'is_detailed' => ['sometimes', 'nullable', 'in:1,0,true,false'],
+                    'all' => ['nullable', 'in:1,0,true,false'],
+                    'per_page' => ['sometimes', 'nullable', 'numeric', 'gte:1']
                 ];
             case 'DELETE':
                 return [];
 
             case 'POST':
                 return [
-                   // 'flag' => ['required', 'url'],
+                    // 'flag' => ['required', 'url'],
                     'code' => ['required', 'string', 'min:2', 'max:50', 'unique:countries,code'],
                     'en.name' => [
                         'required',
                         'max:255',
-                         // Rule::unique('country_translations', 'name')
-                         //     ->where(function ($query) {
-                         //         $query->where('locale', 'en');
-                         //     })
+                        // Rule::unique('country_translations', 'name')
+                        //     ->where(function ($query) {
+                        //         $query->where('locale', 'en');
+                        //     })
                     ],
                     'ar.name' => [
                         'required',
                         'max:255',
-                         // Rule::unique('country_translations', 'name')
-                         //     ->where(function ($query) {
-                         //         $query->where('locale', 'ar');
-                         //     })
+                        // Rule::unique('country_translations', 'name')
+                        //     ->where(function ($query) {
+                        //         $query->where('locale', 'ar');
+                        //     })
                     ],
                 ];
             case 'PUT':
@@ -59,22 +59,22 @@ class CountryRequest extends CustomApiRequest
                 return [
                     //'name' => ['required', 'string', 'min:3', 'max:50'],
                     'flag' => ['sometimes', 'url'],
-                    'code' => ['sometimes', 'string', 'min:2', 'max:50', 'unique:countries,code,'.$this->id],
+                    'code' => ['sometimes', 'string', 'min:2', 'max:50', 'unique:countries,code,' . $this->id],
                     'en.name' => [
                         'sometimes',
                         'max:255',
-                         // Rule::unique('country_translations', 'name')
-                         //    ->where(function ($query) {
-                         //        $query->where('locale', 'en')->where('country_id','!=',$this->id);
-                         //    })
+                        // Rule::unique('country_translations', 'name')
+                        //    ->where(function ($query) {
+                        //        $query->where('locale', 'en')->where('country_id','!=',$this->id);
+                        //    })
                     ],
                     'ar.name' => [
                         'sometimes',
                         'max:255',
-                         // Rule::unique('country_translations', 'name')
-                         //     ->where(function ($query) {
-                         //         $query->where('locale', 'ar')->where('country_id','!=',$this->id);
-                         //     })
+                        // Rule::unique('country_translations', 'name')
+                        //     ->where(function ($query) {
+                        //         $query->where('locale', 'ar')->where('country_id','!=',$this->id);
+                        //     })
                     ],
                     'is_active' => ['nullable', 'boolean']
                 ];
