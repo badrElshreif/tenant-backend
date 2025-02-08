@@ -20,19 +20,23 @@ class ListCountriesService extends Service
 
         if (isset($data['is_paginated']) && $data['is_paginated'] == 1):
             $limit = $data['per_page'] ?? 10;
-            $countries = $this->countryRepository->query($data)->paginate($limit);
+
+            $countries = $this->countryRepository->filter($data)->paginate($limit);
             return [
                 'data' => CountryLiteResource::listCollection($countries),
                 'status' => true,
                 'message' => 'Countries List',
             ];
+        else:
+            $countries = $this->countryRepository->filter($data)->get();
+
+            return [
+                'data' => CountryLiteResource::collection($countries),
+                'status' => true,
+                'message' => 'Countries List',
+            ];
         endif;
 
-        $countries = $this->countryRepository->query($data)->get();
-        return [
-            'data' => CountryLiteResource::collection($countries),
-            'status' => true,
-            'message' => 'Countries List',
-        ];
+
     }
 }

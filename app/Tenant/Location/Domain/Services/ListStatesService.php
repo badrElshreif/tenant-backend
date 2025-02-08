@@ -3,7 +3,6 @@
 namespace App\Tenant\Location\Domain\Services;
 
 use App\Infrastructure\Domain\Services\Service;
-use App\Tenant\Location\Domain\Models\State;
 use App\Tenant\Location\Domain\Filters\StateFilter;
 use App\Tenant\Location\Domain\Repositories\StateRepository;
 use App\Tenant\Location\Domain\Resources\StateLiteResource;
@@ -21,74 +20,23 @@ class ListStatesService extends Service
 
     public function handle($data = [])
     {
-
-        $cities = isset($data['cities']) ? $data['cities'] : 0;
-        $country_id = $data['country_id'] ?? null;
-        if (isset($data['is_active']) && $data['is_active'] == 'true')
-            $active = 1;
-        if (isset($data['is_active']) && $data['is_active'] == 'false')
-            $active = 0;
-
         if (isset($data['is_paginated']) && $data['is_paginated'] == 1):
             $limit = $data['per_page'] ?? 10;
-            $countries = $this->stateRepository->query($data)
-                ->paginate($limit);
-            return [
-                'data' => StateLiteResource::listCollection($countries),
-                'status' => true,
-                'message' => 'States List',
-            ];
-        endif;
-
-        if (isset($data['is_paginated']) && $data['is_paginated'] == 1):
-            $states = $this->state->filter($this->filter)
-                ->when(isset($data['active']), function ($collection) use ($active) {
-                    return $collection->active($active);
-                })
-                ->when($order == 'name', function ($collection) use ($order_type) {
-                    return $collection->join('state_translations', function ($join) {
-                        $join->on('states.id', '=', 'state_translations.state_id')
-                            ->where('state_translations.locale', '=', app()->getLocale());
-                    })
-                        ->groupBy('states.id')
-                        ->orderBy('state_translations.name', $order_type)
-                        ->select('states.*', 'state_translations.id as state_translation_id');
-                })
-                ->when($order != 'name', function ($collection) use ($order, $order_type) {
-                    return $collection->orderBy($order, $order_type);
-                })
-                ->when(isset($country_id), function ($collection) use ($country_id) {
-                    return $collection->where('country_id', $country_id);
-                })
-                ->whereHas('country', function ($q) {
-                    $q->where('is_active', 1);
-                })
-                ->paginate($limit);
+            $states = $this->stateRepository->query($data)->paginate($limit);
             return [
                 'data' => StateLiteResource::listCollection($states),
                 'status' => true,
                 'message' => 'States List',
             ];
         else:
-            $states = $this->state->filter($this->filter)->active(1)
-                ->whereHas('country', function ($q) {
-                    $q->where('is_active', 1);
-                })
-                ->when(isset($country_id), function ($collection) use ($country_id) {
-                    return $collection->where('country_id', $country_id);
-                })
-//                ->when(!auth('admin')->check() || $cities == 1, function ($collection) {
-//                    return $collection->whereHas('cities', function ($q) {
-//                        $q->where('is_active', 1);
-//                    });
-//                })
-                ->get();
-
+            $states = $this->stateRepository->query($data)->get();
             return [
-                'data' => StateLiteResource::listCollection($states),
+                'data' => StateLiteResource::collection($states),
                 'status' => true,
                 'message' => 'States List',
             ];
         endif;
+
+
     }
 }

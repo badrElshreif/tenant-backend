@@ -15,12 +15,12 @@ class CityRequest extends CustomApiRequest
                     'state_id' => [
                         'nullable', 'numeric',
                         Rule::exists('states', 'id')->whereNull('deleted_at')],
-                    'orderBy' => [
+                    'order_by' => [
                         'sometimes',
                         'nullable',
                         Rule::in(['id', 'name', 'created_at', 'is_active']),
                     ],
-                    'orderType' => [
+                    'order_type' => [
                         'sometimes',
                         'nullable',
                         Rule::in(['ASC', 'DESC', 'asc', 'desc']),

@@ -20,6 +20,10 @@ class GenericResponder extends Responder implements ResponderInterface
                 $result = $data ?? [];
             }
 
+            if(!empty($result['data'])){
+                $result = $result['data'];
+            }
+
             return response()->json([
                 'status' => $this->response->status ?? true,
                 'message' => $this->response->message ?? "success",
