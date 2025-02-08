@@ -7,17 +7,17 @@ use App\Infrastructure\Domain\Services\Service;
 use App\Infrastructure\Enums\ResponseType;
 use App\Tenant\Brand\Domain\Models\Brand;
 use App\Tenant\Brand\Domain\Filters\BrandFilter;
+use App\Tenant\Brand\Domain\Repositories\BrandRepository;
 use App\Tenant\Brand\Domain\Resources\BrandLiteResource;
 use Symfony\Component\HttpFoundation\Response;
 
 class ListBrandsService extends Service
 {
-    protected $brand, $filter;
+    protected $brandRepository;
 
-    public function __construct(Brand $brand, BrandFilter $filter)
+    public function __construct(BrandRepository $brandRepository)
     {
-        $this->brand = $brand;
-        $this->filter = $filter;
+        $this->brandRepository = $brandRepository;
     }
 
     public function handle($data = [])
