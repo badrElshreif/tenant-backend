@@ -10,7 +10,7 @@ use App\Infrastructure\Exceptions\ModelNotFoundException;
 use App\Notification\Domain\Notifications\OrderNotification;
 use App\Product\Domain\Models\Product;
 use App\Shipping\GatewayFactoryInterface;
-use App\User\Domain\Models\User;
+use App\User\Domain\Models\Customer;
 use App\Admin\Domain\Models\Admin;
 use DB;
 use GuzzleHttp\Exception\GuzzleException;
@@ -126,7 +126,7 @@ class UpdateOrdersStatusService extends Service
     public function handleGift($order)
     {
         if ($order->gift) {
-            $gift_user = User::find($order->gift->user_id);
+            $gift_user = Customer::find($order->gift->user_id);
             if ($gift_user) {
                 $gift_msg = __('general.orders.orderGiftRequested') . $order->user->name;
                 $notif_data = array(

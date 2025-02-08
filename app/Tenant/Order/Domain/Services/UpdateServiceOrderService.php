@@ -10,7 +10,7 @@ use App\Product\Domain\Models\ProductView;
 use App\Product\Domain\Models\Product;
 use App\Product\Domain\Models\ProductExtraProperty;
 use App\Infrastructure\Exceptions\ModelNotFoundException;
-use App\User\Domain\Models\User;
+use App\User\Domain\Models\Customer;
 use App\Warranty\Domain\Models\Warranty;
 use App\PromoCode\Domain\Models\PromoCode;
 use DB;
@@ -26,7 +26,7 @@ class UpdateServiceOrderService extends Service
             // Begin Transaction
             DB::beginTransaction();
             // if(isset($data['user_id']) && !auth('api')->check())
-            //     $user = User::findOrFail($data['user_id']);
+            //     $user = Customer::findOrFail($data['user_id']);
             // else
             //     $user = auth()->user();
             $order = Order::findOrFail($data['order_id']);

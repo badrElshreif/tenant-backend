@@ -22,6 +22,7 @@ interface RepositoryInterface
     public function create(array $attributes);
 
     public function update($id, array $attributes);
+    public function updateOrFail($id, array $attributes);
 
     public function delete($id);
 }

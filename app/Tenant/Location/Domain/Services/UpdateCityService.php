@@ -3,18 +3,24 @@
 namespace App\Tenant\Location\Domain\Services;
 
 use App\Infrastructure\Domain\Services\Service;
+use App\Tenant\Location\Domain\Repositories\CityRepository;
 use App\Tenant\Location\Domain\Resources\CityResource;
-use App\Tenant\Location\Domain\Models\City;
 use Symfony\Component\HttpFoundation\Response;
 
 class UpdateCityService extends Service
 {
+    protected $cityRepository;
+
+    public function __construct(CityRepository $cityRepository)
+    {
+        $this->cityRepository = $cityRepository;
+    }
+
     public function handle($data = [])
     {
         try {
-            $city = City::findOrFail($data['city_id']);
-            $city->update($data);
-
+            
+            $city = $this->cityRepository->update($data['city_id'], $data);
             return [
                 'status' => true,
                 'data' => new CityResource($city),

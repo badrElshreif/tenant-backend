@@ -9,7 +9,7 @@ use App\Tenant\Order\Domain\Models\Status;
 use App\Infrastructure\Exceptions\ModelNotFoundException;
 use App\Notification\Domain\Notifications\OrderNotification;
 use App\Product\Domain\Models\Product;
-use App\User\Domain\Models\User;
+use App\User\Domain\Models\Customer;
 use App\Admin\Domain\Models\Admin;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;

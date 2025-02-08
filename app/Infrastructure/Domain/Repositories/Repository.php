@@ -69,16 +69,26 @@ abstract class Repository implements RepositoryInterface
         return $this->model->paginate($limit);
     }
 
-    public function create(array $data)
+    public function create(array $attributes)
     {
-        return $this->model->create($data);
+        return $this->model->create($attributes);
     }
 
-    public function update($id, array $data)
+    public function update($id, $attributes)
     {
         $model = $this->model->find($id);
         if ($model) {
-            $model->update($data);
+            $model->update($attributes);
+            return $model;
+        }
+        return null;
+    }
+
+    public function updateOrFail($id,$attributes)
+    {
+        $model = $this->model->findOrFail($id);
+        if ($model) {
+            $model->update($attributes);
             return $model;
         }
         return null;

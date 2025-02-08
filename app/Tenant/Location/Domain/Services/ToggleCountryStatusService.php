@@ -3,16 +3,23 @@
 namespace App\Tenant\Location\Domain\Services;
 
 use App\Infrastructure\Domain\Services\Service;
-use App\Tenant\Location\Domain\Models\Country;
+use App\Tenant\Location\Domain\Repositories\CountryRepository;
 use App\Tenant\Location\Domain\Resources\CountryResource;
 use Symfony\Component\HttpFoundation\Response;
 
 class ToggleCountryStatusService extends Service
 {
+
+    protected $countryRepository;
+
+    public function __construct(CountryRepository $countryRepository)
+    {
+        $this->countryRepository = $countryRepository;
+    }
     public function handle($data = [])
     {
         try {
-            $country = Country::findOrFail($data['country_id']);
+            $country = $this->countryRepository->findOrFail($data['country_id']);
 
             if ($country->is_active) {
                 if (count($country->states()->where('is_active', 1)->get()) > 0)

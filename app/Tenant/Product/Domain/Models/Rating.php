@@ -17,7 +17,7 @@ class Rating extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\User\Domain\Models\User');
+        return $this->belongsTo('App\User\Domain\Models\Customer');
     }
 
     public function product()

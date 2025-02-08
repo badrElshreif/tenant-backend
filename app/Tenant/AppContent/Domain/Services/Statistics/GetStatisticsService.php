@@ -13,7 +13,7 @@ use App\Property\Domain\Models\Property;
 use App\Warranty\Domain\Models\Warranty;
 use App\Brand\Domain\Models\Brand;
 use App\Store\Domain\Models\Store;
-use App\User\Domain\Models\User;
+use App\User\Domain\Models\Customer;
 use Illuminate\Support\Arr;
 
 class GetStatisticsService extends Service
@@ -63,8 +63,8 @@ class GetStatisticsService extends Service
                 return $collection->where('warranties.store_id', $store_id);
             })
         ->count();
-        // $statistics['users'] = User::where('is_active', 1)->count();
-        $statistics['users'] = User::all()->count();
+        // $statistics['users'] = Customer::where('is_active', 1)->count();
+        $statistics['users'] = Customer::all()->count();
         if(auth()->guard('store')->check()){
             return new GenericPayload(Arr::only($statistics, ['categories', 'products', 'warranties']), Response::HTTP_RESET_CONTENT);
         } else if(auth()->guard('center')->check()) {

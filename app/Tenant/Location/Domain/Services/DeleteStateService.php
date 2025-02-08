@@ -2,25 +2,32 @@
 
 namespace App\Tenant\Location\Domain\Services;
 
-use App\Infrastructure\Domain\Payloads\GenericPayload;
 use App\Infrastructure\Domain\Services\Service;
-use App\Tenant\Location\Domain\Models\State;
+use App\Tenant\Location\Domain\Repositories\StateRepository;
 use Symfony\Component\HttpFoundation\Response;
 
 class DeleteStateService extends Service
 {
+
+    protected $stateRepository;
+
+    public function __construct(StateRepository $stateRepository)
+    {
+        $this->stateRepository = $stateRepository;
+    }
+
     public function handle($data = [])
     {
         try {
-            $state = State::findOrFail($data['state_id']);
-            if (count($state->cities()->where('is_active', 1)->get()) > 0)
+            $state = $this->stateRepository->findOrFail($data['state_id']);
+            if ($state->cities()->where('is_active', 1)->count() > 0)
                 return [
                     'status' => false,
                     'message' => __('error.cannotDelete'),
                     'code' => Response::HTTP_NO_CONTENT,
                 ];
 
-//            if(count($state->addresses()->get()) > 0)
+//            if($state->addresses()->count() > 0)
 //                return new GenericPayload(
 //                    __('error.cannotDelete'), 422
 //                );

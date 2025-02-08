@@ -2,19 +2,26 @@
 
 namespace App\Tenant\Location\Domain\Services;
 
-use App\Infrastructure\Domain\Payloads\GenericPayload;
 use App\Infrastructure\Domain\Services\Service;
-use App\Tenant\Location\Domain\Models\City;
+use App\Tenant\Location\Domain\Repositories\CityRepository;
 use Symfony\Component\HttpFoundation\Response;
 
 class DeleteCityService extends Service
 {
+
+    protected $cityRepository;
+
+    public function __construct(CityRepository $cityRepository)
+    {
+        $this->cityRepository = $cityRepository;
+    }
+
     public function handle($data = [])
     {
         try {
-            $city = City::findOrFail($data['city_id']);
+            $city = $this->cityRepository->findOrFail($data['city_id']);
 
-            if (count($city->addresses()->get()) > 0)
+            if ($city->addresses()->count() > 0)
                 return [
                     'status' => false,
                     'message' => __('error.cannotDelete'),

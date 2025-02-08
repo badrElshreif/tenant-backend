@@ -39,6 +39,6 @@ class City extends Model
 
     public function addresses()
     {
-        return $this->hasMany('App\User\Domain\Models\UserAddress');
+        //return $this->hasMany(::class);
     }
 }

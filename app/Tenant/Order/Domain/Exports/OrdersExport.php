@@ -49,7 +49,7 @@ class OrdersExport implements FromCollection, WithHeadings, WithMapping
     {
         return [
             'ID',
-            'User',
+            'Customer',
             'Total',
             'Status',
             'Payment Method',

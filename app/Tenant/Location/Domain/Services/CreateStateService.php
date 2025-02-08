@@ -3,16 +3,23 @@
 namespace App\Tenant\Location\Domain\Services;
 
 use App\Infrastructure\Domain\Services\Service;
-use App\Tenant\Location\Domain\Models\State;
+use App\Tenant\Location\Domain\Repositories\StateRepository;
 use App\Tenant\Location\Domain\Resources\StateResource;
 use Symfony\Component\HttpFoundation\Response;
 
 class CreateStateService extends Service
 {
+    protected $stateRepository;
+
+    public function __construct(StateRepository $stateRepository)
+    {
+        $this->stateRepository = $stateRepository;
+    }
+
     public function handle($data = [])
     {
         try {
-            $state = State::create($data);
+            $state = $this->stateRepository->create($data);
 
             return [
                 'data' => new StateResource($state),

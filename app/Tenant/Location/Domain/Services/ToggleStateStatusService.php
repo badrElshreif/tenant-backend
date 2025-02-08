@@ -2,22 +2,27 @@
 
 namespace App\Tenant\Location\Domain\Services;
 
-use App\Infrastructure\Domain\Payloads\GenericPayload;
 use App\Infrastructure\Domain\Services\Service;
-use App\Infrastructure\Enums\ResponseType;
+use App\Tenant\Location\Domain\Repositories\StateRepository;
 use App\Tenant\Location\Domain\Resources\StateResource;
-use App\Tenant\Location\Domain\Models\State;
 use Symfony\Component\HttpFoundation\Response;
 
 class ToggleStateStatusService extends Service
 {
+    protected $stateRepository;
+
+    public function __construct(StateRepository $stateRepository)
+    {
+        $this->stateRepository = $stateRepository;
+    }
+
     public function handle($data = [])
     {
         try {
-            $state = State::findOrFail($data['state_id']);
+            $state = $this->stateRepository->findOrFail($data['state_id']);
 
             if ($state->is_active) {
-                if (count($state->cities()->where('is_active', 1)->get()) > 0)
+                if ($state->cities()->where('is_active', 1)->count() > 0)
                     return [
                         'status' => false,
                         'message' => __('error.cannotDeactivate'),

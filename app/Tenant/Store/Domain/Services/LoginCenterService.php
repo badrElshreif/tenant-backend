@@ -20,7 +20,7 @@ class LoginCenterService extends Service
         if (isset($isActivated) && !$isActivated) {
             auth("store")->logout();
             return new UnauthorizedPayload([
-                'userIsNoActive' => 'User is not activated yet.',
+                'userIsNoActive' => 'Customer is not activated yet.',
             ]);
         }
         return new UnauthorizedPayload;

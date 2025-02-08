@@ -5,7 +5,7 @@ namespace App\Tenant\Order\Domain\Services\Transaction;
 use App\Infrastructure\Domain\Payloads\GenericPayload;
 use App\Infrastructure\Domain\Services\Service;
 use App\Tenant\Order\Domain\Models\Transaction;
-use App\User\Domain\Models\User;
+use App\User\Domain\Models\Customer;
 use App\Infrastructure\Exceptions\UserNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -15,7 +15,7 @@ class ListTransactionsService extends Service
     {
         try {
 	        $limit = isset($data['per_page']) ? $data['per_page'] : config('app.pagination_limit');
-	        $user = User::findOrFail($data['user_id']);
+	        $user = Customer::findOrFail($data['user_id']);
 	        $transactions = $user->transactions()->orderBy('created_at', 'desc')->paginate($limit);
 
 	        return new GenericPayload($transactions, Response::HTTP_ACCEPTED);

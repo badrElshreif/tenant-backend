@@ -6,7 +6,7 @@ use App\Infrastructure\Domain\Payloads\GenericPayload;
 use App\Infrastructure\Domain\Services\Service;
 use App\Tenant\Order\Domain\Models\Transaction;
 use Illuminate\Support\Facades\DB;
-use App\User\Domain\Models\User;
+use App\User\Domain\Models\Customer;
 use App\Infrastructure\Exceptions\UserNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -16,7 +16,7 @@ class CreateTransactionService extends Service
     {
         try {
 
-            $user = User::findOrFail($data['user_id']);
+            $user = Customer::findOrFail($data['user_id']);
             $wallet = $user->transactions()->orderBy('id', 'desc')->first();
             $data['wallet_total'] = $wallet ? $wallet->wallet_total : 0.00;
 

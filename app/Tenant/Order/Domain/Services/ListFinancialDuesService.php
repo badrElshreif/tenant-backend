@@ -12,7 +12,7 @@ use App\Tenant\Order\Domain\Models\Coupon;
 use App\Tenant\Order\Domain\Models\ShippingCompany;
 use App\Product\Domain\Models\Product;
 use App\Infrastructure\Exceptions\ModelNotFoundException;
-use App\User\Domain\Models\User;
+use App\User\Domain\Models\Customer;
 use DB;
 use App\Tenant\Order\Domain\Filters\OrderFilter;
 use Symfony\Component\HttpFoundation\Response;

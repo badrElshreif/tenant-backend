@@ -70,7 +70,7 @@ class AppServiceProvider extends ServiceProvider
 
         Passport::tokensCan([
             'tenant-admin' => 'Admin Store Type',
-            'tenant-user' => 'User Store Type',
+            'tenant-user' => 'Customer Store Type',
             'tenant-vendor' => 'Vendor Store Type',
         ]);
 

@@ -8,7 +8,7 @@ use App\Product\Domain\Models\Product;
 use App\Tenant\Order\Domain\Models\Cart;
 use App\Product\Domain\Models\ProductExtraProperty;
 use DB;
-use App\User\Domain\Models\User;
+use App\User\Domain\Models\Customer;
 use App\Infrastructure\Exceptions\UserNotFoundException;
 use App\Infrastructure\Exceptions\QueryException;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +18,7 @@ class AddToUserCartService extends Service
     public function handle($data = [])
     {
         try {
-            $user = User::findOrFail($data['user_id']);
+            $user = Customer::findOrFail($data['user_id']);
             // Begin Transaction
             //DB::beginTransaction();
             if(isset($data['items']) && count($data['items']) . 0){

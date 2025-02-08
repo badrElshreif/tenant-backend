@@ -19,7 +19,7 @@ trait PushNotification
             if ($user) {
                 $firebaseTokens = $user->deviceTokens->pluck('device_token')->all();
             } else {
-                $firebaseTokens = \App\User\Domain\Models\DeviceToken::where('tokenable_type', 'App\User\Domain\Models\User')->pluck('device_token')->all();
+                $firebaseTokens = \App\User\Domain\Models\DeviceToken::where('tokenable_type', 'App\User\Domain\Models\Customer')->pluck('device_token')->all();
             }
         }
 

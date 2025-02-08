@@ -17,7 +17,7 @@ use App\Store\Domain\Models\Store;
 use App\Product\Domain\Models\ProductView;
 use App\Warranty\Domain\Models\Warranty;
 use App\Infrastructure\Exceptions\ModelNotFoundException;
-use App\User\Domain\Models\User;
+use App\User\Domain\Models\Customer;
 use DB;
 use App\Notification\Domain\Notifications\OrderNotification;
 use App\Tenant\Order\Domain\Models\BankTransfer;
@@ -48,7 +48,7 @@ class CreateOrderService extends Service
             // Begin Transaction
             DB::beginTransaction();
             if (isset($data['user_id']) && !auth('api')->check())
-                $user = User::findOrFail($data['user_id']);
+                $user = Customer::findOrFail($data['user_id']);
             else
                 $user = auth()->user();
 

@@ -10,12 +10,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ListStatesService extends Service
 {
-    protected $stateRepository, $filter;
+    protected $stateRepository;
 
-    public function __construct(StateRepository $stateRepository, StateFilter $filter)
+    public function __construct(StateRepository $stateRepository)
     {
         $this->stateRepository = $stateRepository;
-        $this->filter = $filter;
     }
 
     public function handle($data = [])
