@@ -3,7 +3,6 @@
 namespace App\Tenant\Location\Domain\Services;
 
 use App\Infrastructure\Domain\Services\Service;
-use App\Tenant\Location\Domain\Models\City;
 use App\Tenant\Location\Domain\Repositories\CityRepository;
 use App\Tenant\Location\Domain\Resources\CityResource;
 use Symfony\Component\HttpFoundation\Response;
