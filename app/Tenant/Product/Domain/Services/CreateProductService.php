@@ -4,11 +4,10 @@ namespace App\Tenant\Product\Domain\Services;
 
 use App\Infrastructure\Domain\Payloads\GenericPayload;
 use App\Infrastructure\Domain\Services\Service;
-use App\Infrastructure\Enums\ResponseType;
 use App\Infrastructure\Traits\UploaderHelper;
-use App\Tenant\Brand\Domain\Models\Brand;
 use App\Tenant\Category\Domain\Models\Category;
 use App\Tenant\Product\Domain\Models\Product;
+use App\Tenant\Product\Domain\Repositories\ProductRepository;
 use App\Tenant\Product\Domain\Resources\ProductResource;
 use App\Tenant\Property\Domain\Models\Property;
 use App\Tenant\Property\Domain\Models\PropertyOption;
@@ -19,7 +18,28 @@ class CreateProductService extends Service
 {
     use UploaderHelper;
 
-    public function handle($data = [])
+    /**
+     * @var ProductRepository
+     */
+    private ProductRepository $productRepository;
+
+    /**
+     * Create a new CreateProductService instance.
+     *
+     * @param ProductRepository $productRepository
+     */
+    public function __construct(ProductRepository $productRepository)
+    {
+        $this->productRepository = $productRepository;
+    }
+
+    /**
+     * Handle product creation.
+     *
+     * @param array $data The request data
+     * @return array{status: bool, message: string, data?: ProductResource, code?: int}
+     */
+    public function handle(array $data = []): array
     {
         try {
             // Begin Transaction
@@ -48,7 +68,7 @@ class CreateProductService extends Service
 
             $data['image'] = $this->handleUploadImg($data['image'], 'products');
 
-            $product = Product::create($data);
+            $product = $this->productRepository->create($data);
 
 
             if (isset($data['attachments'])) {
@@ -86,7 +106,14 @@ class CreateProductService extends Service
 
     }
 
-    private function saveProperties($product, $properties)
+    /**
+     * Save product properties.
+     *
+     * @param Product $product
+     * @param array $properties
+     * @return void
+     */
+    private function saveProperties(Product $product, array $properties): void
     {
         $properties_arr = [];
         foreach ($properties as $property) {

@@ -8,10 +8,11 @@ use App\Tenant\Category\Domain\Services\ListAllCategoriesService;
 
 class ListAllCategoriesAction
 {
-    public function __construct(GenericResponder $responder, ListAllCategoriesService $services)
+    public function __construct(
+        protected GenericResponder $responder,
+    protected ListAllCategoriesService $services)
     {
-        $this->responder = $responder;
-        $this->services = $services;
+
     }
 
     public function __invoke(CategoryRequest $request)

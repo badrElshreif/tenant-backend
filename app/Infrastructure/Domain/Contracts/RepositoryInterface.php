@@ -13,7 +13,7 @@ interface RepositoryInterface
 
     public function onlyTrashed();
 
-    public function filter($request);
+    public function filter(array $request);
 
     public function get();
 

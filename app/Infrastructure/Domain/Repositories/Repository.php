@@ -47,7 +47,7 @@ abstract class Repository implements RepositoryInterface
         return $this;
     }
 
-    public function filter($request)
+    public function filter(array $request)
     {
         return $this;
     }

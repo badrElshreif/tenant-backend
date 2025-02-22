@@ -14,11 +14,11 @@ class ProductRequest extends CustomApiRequest
             case 'GET':
             {
                 return [
-                    'orderBy' => [
+                    'order_by' => [
                         'nullable',
                         Rule::in(['id', 'name', 'created_at', 'price', 'most_selling', 'most_rated', 'preview_fees', 'is_active']),
                     ],
-                    'orderType' => [
+                    'order_type' => [
                         'nullable',
                         Rule::in(['ASC', 'DESC', 'asc', 'desc']),
                     ],
@@ -30,7 +30,6 @@ class ProductRequest extends CustomApiRequest
                     'is_detailed' => ['nullable'],
                     'per_page' => ['nullable', 'numeric', 'gte:1'],
                     'type' => ['nullable', 'in:stores,centers'],
-                    'has_pagination' => ['nullable'],
                     'country_id' => ['nullable'],
                     'state_id' => ['nullable'],
                     'city_id' => ['nullable'],
