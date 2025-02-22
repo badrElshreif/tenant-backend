@@ -21,7 +21,7 @@ class BrandResource extends JsonResource
             'ar' => optional($this->translate('ar'))->only('name', 'description'),
             'en' => optional($this->translate('en'))->only('name', 'description'),
             'is_active' => (bool) $this->is_active,
-            'image' => $this->logo_url(300,300),
+            'image' => $this->getLogoUrl(300,300),
             'created_at' => \Carbon\Carbon::parse($this->created_at)->translatedFormat('d M Y')
         ];
         return $resource;

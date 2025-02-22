@@ -7,61 +7,122 @@ use App\Main\Tenant\Domain\Models\Tenant;
 use App\Tenant\Product\Domain\Models\Product;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
 use Astrotomic\Translatable\Translatable;
 use App\Infrastructure\Domain\Filters\Filterable;
 
 class Brand extends Model
 {
-    use Translatable, HasFactory, Filterable, UploaderHelper;
+    use Translatable;
+    use HasFactory;
+    use Filterable;
+    use UploaderHelper;
 
-    public $translatedAttributes = ['name', 'description'];
-    protected $appends = ['min_img'];
-    protected $guarded = ['id'];
-    protected $casts = [
-        'is_active' => 'boolean'
+    private const DEFAULT_LOGO_PATH = 'assets/images/default/default-logo.png';
+    private const DEFAULT_THUMBNAIL_SIZE = [
+        'width' => 80,
+        'height' => 80
     ];
 
-    public function products()
+    /**
+     * The attributes that are translatable.
+     *
+     * @var array<string>
+     */
+    public array $translatedAttributes = ['name', 'description'];
+
+    /**
+     * The attributes that should be appended to arrays.
+     *
+     * @var array<string>
+     */
+    protected $appends = ['min_img'];
+
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array<string>
+     */
+    protected $guarded = ['id'];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected  $casts = [
+        'is_active' => 'boolean',
+        'tax_percentage' => 'float'
+    ];
+
+    /**
+     * Get the products associated with the brand.
+     *
+     * @return HasMany
+     */
+    public function products(): HasMany
     {
         return $this->hasMany(Product::class, 'brand_id', 'id');
     }
 
-    public function scopeActive($query, $is_active)
+    /**
+     * Scope a query to only include active/inactive brands.
+     *
+     * @param Builder $query
+     * @param bool $isActive
+     * @return Builder
+     */
+    public function scopeActive(Builder $query, bool $isActive): Builder
     {
-        if ($is_active == 1) {
-            return $query->where('is_active', 1);
-        } else {
-            return $query->where('is_active', 0);
-        }
+        return $query->where('is_active', $isActive);
     }
 
-    public function getMinImgAttribute()
+    /**
+     * Get the brand's thumbnail image URL.
+     *
+     * @return string
+     */
+    public function getMinImgAttribute(): string
     {
-        if (isset($this->image))
-            return routeTenant('tenant.image.resize',
-                [80, 80, 'uploads', $this->image],
-            );
-        else
-            return asset("assets/images/default/default-logo.png");
+        return $this->getLogoUrl(
+            self::DEFAULT_THUMBNAIL_SIZE['width'],
+            self::DEFAULT_THUMBNAIL_SIZE['height']
+        );
     }
 
-    protected function setImageAttribute($value)
+    /**
+     * Set the brand's image.
+     *
+     * @param string|null $value
+     * @return void
+     */
+    protected function setImageAttribute(?string $value): void
     {
         if (!empty($value)) {
-            $image = explode("/", $value);
+            $image = explode('/', $value);
             $this->attributes['image'] = end($image);
         }
     }
 
-    public function logo_url($w, $h)
+    /**
+     * Get the brand's logo URL with specified dimensions.
+     *
+     * @param int $width
+     * @param int $height
+     * @return string
+     */
+    public function getLogoUrl(int $width, int $height): string
     {
-        if (isset($this->image)):
-            return routeTenant('tenant.image.resize',
-                [$w, $h, 'uploads', $this->image],
-            );
-        else:
-            return asset("assets/images/default/default-logo.png");
-        endif;
-    }
+        if (isset($this->image)) {
+            return routeTenant('tenant.image.resize', [
+                $width,
+                $height,
+                'uploads',
+                $this->image
+            ]);
+        }
 
+        return asset(self::DEFAULT_LOGO_PATH);
+    }
 }

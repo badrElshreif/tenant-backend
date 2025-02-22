@@ -2,42 +2,66 @@
 
 namespace App\Tenant\Location\Domain\Repositories;
 
-
 use App\Infrastructure\Domain\Repositories\Repository;
 use App\Tenant\Location\Domain\Models\Country;
+use Illuminate\Database\Eloquent\Builder;
 
 class CountryRepository extends Repository
 {
-    protected $country;
+    private const DEFAULT_ORDER_COLUMN = 'id';
+    private const DEFAULT_ORDER_TYPE = 'ASC';
+    private const ACTIVE_STATUS = 1;
 
+    /**
+     * Create a new CountryRepository instance.
+     *
+     * @param Country $country
+     */
     public function __construct(Country $country)
     {
         parent::__construct($country);
     }
 
-    public function filter($request)
+    /**
+     * Build query with filters and sorting
+     *
+     * @param array $request
+     * @return self
+     */
+    public function filter($request): self
     {
-        $order = $request['order_by'] ?? 'id';
-        $order_type = $request['order_type'] ?? 'ASC';
+        $orderColumn = $request['order_by'] ?? self::DEFAULT_ORDER_COLUMN;
+        $orderType = $request['order_type'] ?? self::DEFAULT_ORDER_TYPE;
 
         $this->model = $this->model
-//            ->filter($this->filter)
-            ->when(isset($request['active']), function ($collection) use ($request) {
-                return $collection->where('is_active', $request['active']);
-            })
-            ->when($order == 'name', function ($collection) use ($order_type) {
-                return $collection->join('country_translations', function ($join) {
-                    $join->on('countries.id', '=', 'country_translations.country_id')
-                        ->where('country_translations.locale', '=', app()->getLocale());
-                })
-                    //  ->groupBy('countries.id')
-                    ->orderBy('country_translations.name', $order_type)
-                    ->select('countries.*', 'country_translations.id as country_translation_id');
-            })->when($order != 'name', function ($collection) use ($order, $order_type) {
-                return $collection->orderBy($order, $order_type);
-            });
+            ->when(
+                isset($request['active']),
+                fn (Builder $query) => $query->where('is_active', (bool)$request['active'])
+            )
+            ->when(
+                $orderColumn === 'name',
+                fn (Builder $query) => $this->orderByTranslatedName($query, $orderType),
+                fn (Builder $query) => $query->orderBy($orderColumn, $orderType)
+            );
 
         return $this;
+    }
+
+    /**
+     * Order query by translated name
+     *
+     * @param Builder $query
+     * @param string $orderType
+     * @return Builder
+     */
+    private function orderByTranslatedName(Builder $query, string $orderType): Builder
+    {
+        return $query->join('country_translations', function ($join) {
+                $join->on('countries.id', '=', 'country_translations.country_id')
+                    ->where('country_translations.locale', '=', app()->getLocale());
+            })
+            ->orderBy('country_translations.name', $orderType)
+            ->select('countries.*', 'country_translations.id as country_translation_id');
     }
 
 

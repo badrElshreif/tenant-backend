@@ -21,14 +21,14 @@ class ListStatesService extends Service
     {
         if (isset($data['is_paginated']) && $data['is_paginated'] == 1):
             $limit = $data['per_page'] ?? 10;
-            $states = $this->stateRepository->query($data)->paginate($limit);
+            $states = $this->stateRepository->filter($data)->paginate($limit);
             return [
                 'data' => StateLiteResource::listCollection($states),
                 'status' => true,
                 'message' => 'States List',
             ];
         else:
-            $states = $this->stateRepository->query($data)->get();
+            $states = $this->stateRepository->filter($data)->get();
             return [
                 'data' => StateLiteResource::collection($states),
                 'status' => true,

@@ -20,7 +20,7 @@ class ListCountriesService extends Service
 
         if (isset($data['is_paginated']) && $data['is_paginated'] == 1):
             $limit = $data['per_page'] ?? 10;
-
+            
             $countries = $this->countryRepository->filter($data)->paginate($limit);
             return [
                 'data' => CountryLiteResource::listCollection($countries),
