@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
+
 Route::get('/', function (\App\Main\Tenant\Domain\Models\Tenant $tenantInstance) {
     return ["Welcome Tenant (" . $tenantInstance->name . ") Dashboard Apis"];
 });

@@ -20,15 +20,16 @@ class ListBrandsService extends Service
 
 
         if (isset($data['is_paginated']) && $data['is_paginated'] == 1):
-            $limit = $data['per_page'] ?? 10;
+            $limit = $data['per_page'] ?? 1;
             $brands = $this->brandRepository->filter($data)->paginate($limit);
+
             return [
                 'data' => BrandLiteResource::listCollection($brands),
                 'status' => true,
                 'message' => 'Brands List',
             ];
         else:
-            $brands = $this->brandRepository->filter($data);
+            $brands = $this->brandRepository->filter($data)->get();
             return [
                 'data' => BrandLiteResource::collection($brands),
                 'status' => true,

@@ -4,6 +4,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\HandleInertiaRequests;
+
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -14,7 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
         then: function () {
             if (!empty(getSubdomain()) || request()->headers->has('tenant') || getDomain() != env('APP_DOMAIN')) {
                 //Tenants Routes
-                $route = Route::middleware(['set-locale','tenant-db-connection', 'tenant-expire-token']);
+                $route = Route::middleware(['set-locale', 'tenant-db-connection', 'tenant-expire-token']);
                 if (!request()->headers->has('tenant') && getDomain() == env('APP_DOMAIN')) {
                     $route->domain('{tenant}.' . env('APP_DOMAIN'));
                 }
@@ -22,11 +24,13 @@ return Application::configure(basePath: dirname(__DIR__))
                 $route->group(function () {
 
                     Route::prefix('/')
+                        ->middleware(['web'])
+                        ->name('tenant.dashboard.')
                         ->group(__DIR__ . '/../routes/tenant/web.php');
 
                     //Dashboard apis
                     Route::prefix('api/dashboard')
-                        ->name('tenant.dashboard.')
+                        ->name('tenant.')
                         ->group(__DIR__ . '/../routes/tenant/dashboard.php');
 
                     //Front apis
@@ -56,10 +60,20 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
+            'inertia-request' =>  HandleInertiaRequests::class,
             'tenant-db-connection' => \App\Infrastructure\Http\Middleware\TenantDatabaseConnection::class,
             'tenant-expire-token' => \App\Infrastructure\Http\Middleware\TenantExpireToken::class,
             'tenant-admin-type' => \App\Infrastructure\Http\Middleware\TenantAdminType::class,
             'set-locale' => \App\Infrastructure\Http\Middleware\SetLocale::class,
+        ]);
+
+        $middleware->appendToGroup('/',[
+            \App\Http\Middleware\HandleInertiaRequests::class,
+        ]);
+        $middleware->appendToGroup('web', [
+            Illuminate\Session\Middleware\StartSession::class,
+            \App\Http\Middleware\HandleInertiaRequests::class,
+            Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
@@ -77,3 +91,6 @@ return Application::configure(basePath: dirname(__DIR__))
         \App\Infrastructure\Console\Commands\SeedTenant::class,
         \App\Infrastructure\Console\Commands\MigrateTenant::class,
     ])->create();
+
+
+

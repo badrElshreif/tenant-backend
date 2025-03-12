@@ -15,6 +15,8 @@ use Laravel\Passport\Passport;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use Inertia\Inertia;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -32,7 +34,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
 
+
+
         if (getDomain() != env('APP_DOMAIN')) {
+
             $tenant = Tenant::where('domain', request()->getHost())->firstOrFail();
         } elseif (!empty(getSubdomain())) {
             $tenant = getSubdomain() ?? "";
@@ -101,6 +106,7 @@ class AppServiceProvider extends ServiceProvider
             // Tell Laravel to load migrations from these paths
             $this->loadMigrationsFrom($migrationPaths);
         }
+   //     Inertia::share('routeTenant', fn($name , $parameters = []) => routeTenant($name, $parameters));
 
     }
 }

@@ -36,12 +36,16 @@ class BrandRepository extends Repository
         $this->model = $this->model
             ->when(
                 isset($request['active']),
-                fn (Builder $query) => $query->where('is_active', (bool)$request['active'])
+                fn (Builder $query) => $query->where('brands.is_active', (bool)$request['active'])
+            )
+            ->when(
+                isset($request['search']),
+                fn (Builder $query) => $this->searchByName($query, $request['search'])
             )
             ->when(
                 $orderColumn === 'name',
                 fn (Builder $query) => $this->orderByTranslatedName($query, $orderType),
-                fn (Builder $query) => $query->orderBy($orderColumn, $orderType)
+                fn (Builder $query) => $query->orderBy("brands.".$orderColumn, $orderType)
             );
 
         return $this;
@@ -63,6 +67,15 @@ class BrandRepository extends Repository
             ->groupBy('brands.id', 'brand_translations.id')
             ->orderBy('brand_translations.name', $orderType)
             ->select('brands.*', 'brand_translations.id as brand_translation_id');
+    }
+
+    private function searchByName(Builder $query, string $search): Builder
+    {
+        return $query->join('brand_translations', function ($join) use ($search) {
+            $join->on('brands.id', '=', 'brand_translations.brand_id')
+                ->where('brand_translations.locale', '=', app()->getLocale())
+                ->where('brand_translations.name', 'like', "%{$search}%");
+        });
     }
 
 }

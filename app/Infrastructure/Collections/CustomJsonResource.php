@@ -13,12 +13,12 @@ class CustomJsonResource extends JsonResource
     public static function listCollection($resource)
     {
         $collection = (self::collection($resource));
-        if (request()->expectsJson()) {
+//        if (request()->expectsJson()) {
             return self::getPaginatedResponseStatic(
                 $collection->resource,
                 $collection,
             );
-        }
+//        }
 
         return $collection;
     }

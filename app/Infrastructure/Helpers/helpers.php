@@ -42,17 +42,19 @@ function getTenant()
     return app(\App\Main\Tenant\Domain\Models\Tenant::class);
 }
 
-function routeTenant($routeName, $parameters = null)
-{
-    if (request()->headers->has('tenant')) {
+if (!function_exists('routeTenant')) {
+    function routeTenant($routeName, $parameters = null)
+    {
+        if (request()->headers->has('tenant')) {
 //        return "http://" . getTenant()->slug . "." . request()->getHost() .
 //            ltrim(route($routeName, $parameters, false), getTenant()->slug);
-    }
-    if (!request()->headers->has('tenant')) {
-        $parameters['tenant'] = getTenant()->slug;
-    }
+        }
+        if (!request()->headers->has('tenant')) {
+            $parameters['tenant'] = getTenant()->slug;
+        }
 
-    return route($routeName, $parameters);
+        return $routeName ? route($routeName, $parameters) : "";
+    }
 }
 
 if (!function_exists('responseApi')) {
