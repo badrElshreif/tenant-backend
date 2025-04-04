@@ -52,7 +52,7 @@ class Brand extends Model
      * @var array<string, string>
      */
     protected  $casts = [
-        'is_active' => 'boolean',
+       // 'is_active' => 'boolean',
         'tax_percentage' => 'float'
     ];
 
@@ -118,7 +118,7 @@ class Brand extends Model
             return routeTenant('tenant.image.resize', [
                 $width,
                 $height,
-                'uploads',
+                'brands',
                 $this->image
             ]);
         }

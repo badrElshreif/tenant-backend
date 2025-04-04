@@ -51,7 +51,7 @@ class HandleInertiaRequests extends Middleware
                 'avatar' => $request->user()->avatar,
             ] : null,
             'flash' => [
-                //'success' => $request->session()->get('success')
+                'success' => $request->session()->get('success')
             ],
             'locale' => app()->getLocale(),
             //'auth_permissions'=>$request->user() ?  $request->user()->getPermissionsViaRoles()->pluck('name')->toArray() : []

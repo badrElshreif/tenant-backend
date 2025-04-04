@@ -36,7 +36,7 @@ class BrandRequest extends CustomApiRequest
             case 'POST':
             {
                 return [
-                    'en.name' => [
+                    'translations.en.name' => [
                         'required',
                         'max:255',
                         Rule::unique('brand_translations', 'name')
@@ -44,43 +44,43 @@ class BrandRequest extends CustomApiRequest
                                 $query->where('locale', 'en');
                             })
                     ],
-                    'ar.name' => [
-                        'required',
+                    'translations.ar.name' => [
+                        'nullable',
                         'max:255',
                         Rule::unique('brand_translations', 'name')
                             ->where(function ($query) {
                                 $query->where('locale', 'ar');
                             })
                     ],
-                    'en.description' => ['nullable', 'max:1000'],
-                    'ar.description' => ['nullable', 'max:1000'],
-                    'image' => ['required'],
-                    'is_active' => ['nullable', 'boolean'],
+                    'translations.en.description' => ['nullable', 'max:1000'],
+                    'translations.ar.description' => ['nullable', 'max:1000'],
+                    'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+                    'status' => ['required', 'boolean'],
                 ];
             }
             case 'PUT':
             case 'PATCH':
             {
                 return [
-                    'en.name' => [
+                    'translations.en.name' => [
                         'nullable',
                         'max:255',
                         Rule::unique('brand_translations', 'name')
                             ->where(function ($query) {
-                                $query->where('locale', 'en')->where('brand_id', '!=', $this->id);
+                                $query->where('locale', 'en')->where('brand_id', '!=', $this->brand);
                             })
                     ],
-                    'ar.name' => [
+                    'translations.ar.name' => [
                         'nullable',
                         'max:255',
                         Rule::unique('brand_translations', 'name')
                             ->where(function ($query) {
-                                $query->where('locale', 'ar')->where('brand_id', '!=', $this->id);
+                                $query->where('locale', 'ar')->where('brand_id', '!=', $this->brand);
                             })
                     ],
-                    'en.description' => ['nullable', 'max:1000'],
-                    'ar.description' => ['nullable', 'max:1000'],
-                    'image' => ['sometimes','nullable','image'],
+                    'translations.en.description' => ['nullable', 'max:1000'],
+                    'translations.ar.description' => ['nullable', 'max:1000'],
+                    'logo' => ['sometimes','nullable','image'],
                     'is_active' => ['nullable', 'boolean'],
                 ];
             }

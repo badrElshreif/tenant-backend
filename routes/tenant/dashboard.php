@@ -1,10 +1,20 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Events\SubdomainEvent;
 
 
 Route::get('/', function (\App\Main\Tenant\Domain\Models\Tenant $tenantInstance) {
     return ["Welcome Tenant (" . $tenantInstance->name . ") Dashboard Apis"];
+});
+
+Route::get('/send-message', function ( \App\Main\Tenant\Domain\Models\Tenant $tenantInstance) {
+    $message = "rrrrrrrrrrrrr";
+
+    // Fire the event with the message and subdomain
+    broadcast(new SubdomainEvent($message));
+
+    return response()->json(['status' => 'Message broadcasted!']);
 });
 
 

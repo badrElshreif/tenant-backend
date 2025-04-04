@@ -1,4 +1,5 @@
 <?php
+namespace App\Events;
 
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -18,8 +19,13 @@ class SubdomainEvent implements ShouldBroadcast
         $this->subdomain = request()->getHost(); // Get the current subdomain
     }
 
-    public function broadcastOn(): array
+    public function broadcastOn()
     {
-        return [new PrivateChannel("chat.{$this->subdomain}")]; // Unique channel per subdomain
+        return ['messages.' . $this->subdomain]; // Unique channel per subdomain
+    }
+
+    public function broadcastAs()
+    {
+        return 'message.sent';
     }
 }

@@ -37,6 +37,7 @@ Route::get('/storage/{category}/{file}', function ($category, $file) {
 Route::get('/storage/uploads/{width}X{height}/{dir}/{file}', function ($width, $height, $dir, $file) {
     $disk = Storage::disk('public');
     $tenantDir = getTenant()->slug;
+
     $dir = $tenantDir . '/' . $dir;
     if ($disk->exists("$dir/$file")) {
         if (!$disk->exists("$dir/{$width}x{$height}")) {
